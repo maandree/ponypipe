@@ -7,7 +7,7 @@ To ponify a file run:
 
     ponypipe --ponify < SOURCE > TARGET
 
-or
+OR
 
     ponypipe < SOURCE > TARGET
 
