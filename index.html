@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Ponypipe by maandree</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/maandree/ponypipe">Fork Me on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Ponypipe</h1>
+            <h2>[incomplete] Ponify and deponify text</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/maandree/ponypipe/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/maandree/ponypipe/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+      <span class="banner-fix"></span>
+
+      <section id="main_content">
+        <p>Utility for ponifing (and deponyifing) text.</p>
+
+<p>It replaces words should as ’everyone’ with ’everypony’.</p>
+
+<p>To ponify a file run:</p>
+
+<pre><code>ponypipe --ponify &lt; SOURCE &gt; TARGET
+</code></pre>
+
+<p>OR</p>
+
+<pre><code>ponypipe &lt; SOURCE &gt; TARGET
+</code></pre>
+
+<p>To deponify a file run:</p>
+
+<pre><code>ponypipe --deponify &lt; SOURCE &gt; TARGET
+</code></pre>
+
+<p>Information will be put in stderr, to suppress this append:</p>
+
+<pre><code>2&gt;/dev/null
+</code></pre>
+
+<p>You can use customised replacement rules by adding the option:</p>
+
+<pre><code>--rules RULES
+</code></pre>
+
+<p>OR</p>
+
+<pre><code>--rule RULES
+</code></pre>
+
+<p><code>-r</code> can be used instead of <code>--rules</code>.</p>
+
+<p><code>-d</code> can be used instead of <code>--deponify</code>.</p>
+
+<p><code>-z</code> can be used instead of <code>--ponify</code>.</p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/maandree">maandree</a> can be found on <a href="https://github.com/maandree/ponypipe">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
