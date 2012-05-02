@@ -25,7 +25,7 @@ public class Ponypipe
 	for (int i = 0, n = args.length; i < n; i++)
 	    if (args.equals("-z") || args.equals("--ponify"))
 		_ponify = Boolean.TRUE;
-	    else if (args.equals("-z") || args.equals("--ponify"))
+	    else if (args.equals("-d") || args.equals("--deponify"))
 		deponify = true;
 	    else if (args.equals("-r") || args.equals("--rule") || args.equals("--rules"))
 		if (i + 1 < n)
