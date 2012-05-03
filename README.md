@@ -1,4 +1,4 @@
-Utility for ponifing (and deponyifing) text.
+Utility for ponifing (and deponifing) text.
 
 It replaces words should as ’everyone’ with ’everypony’.
 
