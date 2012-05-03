@@ -121,8 +121,6 @@ public class Ponypipe
 		
 		while (ptr > 0)
 		    this.next.write(this.buf[--ptr]);
-		
-		this.buf[0] = this.buf[1] = this.buf[2] = this.buf[3] = this.buf[4] = this.buf[5] = 0;
 	    }
 	}
     }
