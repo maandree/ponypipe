@@ -168,7 +168,7 @@ public class Ponypipe
 	    else
 		if (n > 0)
 		{
-		    buf = (buf << 6) | (b & 1023);
+		    buf = (buf << 6) | (b & 63);
 		    if (--n == 0)
 			this.next.write(buf);
 		}
@@ -203,7 +203,7 @@ public class Ponypipe
 		for (;;)
 	        {
 		    m |= m >> 1;
-		    this.buf[ptr++] = d & 1023;
+		    this.buf[ptr++] = d & 63;
 		    d >>>= 6;
 		    if (d == 0)
 		    {
