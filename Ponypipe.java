@@ -14,11 +14,9 @@ import java.io.*;
  * 
  * @author  Mattias Andrée, <a href="mailto:maandree@kth.se">maandree@kth.se</a>
  */
-public class Ponypipe
-{
-    public static void main(final String... args) throws Throwable
-    {
-	Boolean _ponify = null;
+public class Ponypipe //Who care's if it is fast!
+{   public static void main(final String... args) throws Throwable
+    {   Boolean _ponify = null;
 	boolean deponify = false;
 	String rules = "/usr/share/ponypipe";
 	
@@ -33,8 +31,7 @@ public class Ponypipe
 	
 	final boolean ponify = (_ponify == null) || (deponify == false);
 	
-	{
-	    // rulesIn > decodePipe > rulesPipe
+	{   // rulesIn > decodePipe > rulesPipe
 	    
 	    final OutputStream rulesPipe  = new RulesStream();
 	    final OutputStream decodePipe = new DecodeStream(rulesPipe);
@@ -45,8 +42,16 @@ public class Ponypipe
 	    decodePipe.flush();
 	}
 	
-	{
-	    // stdin > decode:-utf8 > ponify > deponify > encode:+utf8 > stdout
+	{   final int[] tmp = new int[hpPtr];
+	    System.arrayCopy(humans, 0, tmp, 0, hpPtr);
+	    humans = tmp;
+	}
+	{   final int[] tmp = new int[hpPtr];
+	    System.arrayCopy(ponies, 0, tmp, 0, hpPtr);
+	    ponies = tmp;
+	}
+	
+	{   // stdin > decode:-utf8 > ponify > deponify > encode:+utf8 > stdout
 	    
 	    final OutputStream encodePipe   = new EncodeStream(System.out);
 	    final OutputStream deponifyPipe = deponify ? new DeponifyStream(encodePipe) : null;
@@ -60,129 +65,98 @@ public class Ponypipe
     }
     
     
+    
+    static int[][] humans = new int[16];
+    static int[][] ponies = new int[16];
+    static int[] hpPtr = 0;
+    
+    
+    
     static void addRule(final int[] data, final int len)
-    {
+    {   int[] tmp = new int[data.length];
 	for (int i = 1, n = len - 2; i < n; i++)
 	    if ((data[i] == ':') && (data[i + 1] == ':') && (data[i - 1] == ' ') && (data[i + 2] == ' '))
-	    {
-		final int humanOff = 0;
-		final int humanLen = i - 1;
-		final int humanEnd = humanOff + humanLen;
-		final int ponyOff = i + 3;
-		final int ponyLen = len - ponyOff;
-		final int ponyEnd = ponyOff + ponyLen;
-		
-		long humanHash = 0;
-		for (int j = humanOff; j < humanEnd; j++)
-		{
-		    int d = data[i];
-		    if (Character.isAlphabetic(d) == false)
-			d = ' ';
-		    humanHash = (humanHash << 4) | (d & 15);
+	    {   final int[] human, pony;
+		{   int last = ' ';
+		    int ptr = 0, c;
+		    for (int j = 0, j < i; j++)
+			if (((c = data[j]) != ' ') || (last != ' '))
+			    tmp[ptr++] = last = c;
+		    if (ptr == 0)     return;
+		    if (last == ' ')  ptr--;
+		    human = new int[ptr];
+		    System.arraycopy(data, 0, human, 0, ptr);
+		}
+		{   int last = ' ';
+		    int ptr = 0, c;
+		    for (int j = i + 3, j < len; j++)
+			if (((c = data[j]) != ' ') || (last != ' '))
+			    tmp[ptr++] = last = c;
+		    if (ptr == 0)     return;
+		    if (last == ' ')  ptr--;
+		    pony = new int[ptr];
+		    System.arraycopy(data, i, pony, 0, ptr);
 		}
 		
-		long ponyHash = 0;
-		for (int j = ponyOff; j < ponyEnd; j++)
-		{
-		    int d = data[i];
-		    if (Character.isAlphabetic(d) == false)
-			d = ' ';
-		    ponyHash = (ponyHash << 4) | (d & 15);
+		if (hpPtr == humans.length)
+		{   tmp = new int[hpPtr << 1];
+		    System.arraycopy(humans, 0, tmp, 0, hpPtr);
+		    humans = tmp;
+		    
+		    tmp = new int[hpPtr << 1];
+		    System.arraycopy(ponies, 0, tmp, 0, hpPtr);
+		    ponies = tmp;
 		}
-		//#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤#¤
 		
-		break;
-	    }
-    }
+		humans[hpPtr] = human;
+		ponies[hpPtr] = pony;
+		hpPtr++;
+    }       }
     
     
-    
-    public static class PonifyStream extends OutputStream
-    {
-	public PonifyStream(final OutputStream next)
-	{
-	    this.next = next;
-	}
-	
-	private final OutputStream next;
-	
-	public void write(final int b) throws IOException
-	{
-	    next.write(b);
-	}
-	
-	public void flush() throws IOException
-	{
-	    this.next.flush();
-	}
-    }
+    public static class PonifyStream extends TranslateStream
+    {   public PonifyStream(final OutputStream next)
+	{    super(next, humans, ponies);
+    }   }
     
     
-    public static class DeponifyStream extends OutputStream
-    {
-	public DeponifyStream(final OutputStream next)
-	{
-	    this.next = next;
-	}
-	
-	private final OutputStream next;
-	
-	public void write(final int b) throws IOException
-	{
-	    next.write(b);
-	}
-	
-	public void flush() throws IOException
-	{
-	    this.next.flush();
-	}
-    }
+    public static class DeponifyStream extends TranslateStream
+    {   public DeponifyStream(final OutputStream next)
+	{   super(next, ponies, humans);
+    }   }
         
     
     public static class RulesStream extends OutputStream
-    {
-	private int bufSize = 128;
+    {   private int bufSize = 128;
 	private int[] buf = new int[bufSize];
 	private int ptr = 0;
 	private boolean comment = false;
 	
 	public void write(final int b) throws IOException
-	{
-	    if ((this.ptr == 0) && (b == '#'))
-	    {
-		this.comment = true;
+	{   if ((this.ptr == 0) && (b == '#'))
+	    {   this.comment = true;
 		this.ptr = 1;
 	    }
 	    else if (this.comment)
-	    {
-		if (b == '\n')
-		{
-		    this.ptr = 0;
+	    {   if (b == '\n')
+		{   this.ptr = 0;
 		    this.comment = false;
-		}
-	    }
+	    }   }
 	    else if (b == '\n')
-	    {
-		Ponypipe.addRule(buf, ptr);
+	    {	Ponypipe.addRule(buf, ptr);
 		ptr = 0;
 	    }
 	    else
-	    {
-		if (ptr == bufSize)
-		{
-		    final int[] nbuf = new int[this.bufSize <<= 1];
+	    {	if (ptr == bufSize)
+		{   final int[] nbuf = new int[this.bufSize <<= 1];
 		    System.arrayCopy(this.buf, 0, nbuf, 0, this.bufSize >> 1);
 		    this.buf = nbuf;
 		}
 		this.buf[this.ptr++] = b;
-	    }
-	}
+	}   }
+	
 	
 	public void flush() throws IOException
-	{
-	    this.write('\n');
-	}
-    }
-    
-}
+	{   this.write('\n');
+}   }   }
 
