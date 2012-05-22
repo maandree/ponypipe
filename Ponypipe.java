@@ -42,12 +42,12 @@ public class Ponypipe //Who care's if it is fast!
 	    decodePipe.flush();
 	}
 	
-	{   final int[] tmp = new int[hpPtr];
-	    System.arrayCopy(humans, 0, tmp, 0, hpPtr);
+	{   final int[][] tmp = new int[hpPtr][];
+	    System.arraycopy(humans, 0, tmp, 0, hpPtr);
 	    humans = tmp;
 	}
-	{   final int[] tmp = new int[hpPtr];
-	    System.arrayCopy(ponies, 0, tmp, 0, hpPtr);
+	{   final int[][] tmp = new int[hpPtr][];
+	    System.arraycopy(ponies, 0, tmp, 0, hpPtr);
 	    ponies = tmp;
 	}
 	
@@ -66,9 +66,9 @@ public class Ponypipe //Who care's if it is fast!
     
     
     
-    static int[][] humans = new int[16];
-    static int[][] ponies = new int[16];
-    static int[] hpPtr = 0;
+    static int[][] humans = new int[16][];
+    static int[][] ponies = new int[16][];
+    static int hpPtr = 0;
     
     
     
@@ -79,7 +79,7 @@ public class Ponypipe //Who care's if it is fast!
 	    {   final int[] human, pony;
 		{   int last = ' ';
 		    int ptr = 0, c;
-		    for (int j = 0, j < i; j++)
+		    for (int j = 0; j < i; j++)
 			if (((c = data[j]) != ' ') || (last != ' '))
 			    tmp[ptr++] = last = c;
 		    if (ptr == 0)     return;
@@ -89,7 +89,7 @@ public class Ponypipe //Who care's if it is fast!
 		}
 		{   int last = ' ';
 		    int ptr = 0, c;
-		    for (int j = i + 3, j < len; j++)
+		    for (int j = i + 3; j < len; j++)
 			if (((c = data[j]) != ' ') || (last != ' '))
 			    tmp[ptr++] = last = c;
 		    if (ptr == 0)     return;
@@ -99,13 +99,15 @@ public class Ponypipe //Who care's if it is fast!
 		}
 		
 		if (hpPtr == humans.length)
-		{   tmp = new int[hpPtr << 1];
-		    System.arraycopy(humans, 0, tmp, 0, hpPtr);
-		    humans = tmp;
+		{   int[][] _tmp;
 		    
-		    tmp = new int[hpPtr << 1];
-		    System.arraycopy(ponies, 0, tmp, 0, hpPtr);
-		    ponies = tmp;
+		    _tmp = new int[hpPtr << 1][];
+		    System.arraycopy(humans, 0, _tmp, 0, hpPtr);
+		    humans = _tmp;
+		    
+		    _tmp = new int[hpPtr << 1][];
+		    System.arraycopy(ponies, 0, _tmp, 0, hpPtr);
+		    ponies = _tmp;
 		}
 		
 		humans[hpPtr] = human;
@@ -149,7 +151,7 @@ public class Ponypipe //Who care's if it is fast!
 	    else
 	    {	if (ptr == bufSize)
 		{   final int[] nbuf = new int[this.bufSize <<= 1];
-		    System.arrayCopy(this.buf, 0, nbuf, 0, this.bufSize >> 1);
+		    System.arraycopy(this.buf, 0, nbuf, 0, this.bufSize >> 1);
 		    this.buf = nbuf;
 		}
 		this.buf[this.ptr++] = b;

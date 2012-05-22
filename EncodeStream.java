@@ -14,7 +14,7 @@ import java.io.*;
  * 
  * @author  Mattias Andrée, <a href="mailto:maandree@kth.se">maandree@kth.se</a>
  */
-public static class EncodeStream extends OutputStream
+public class EncodeStream extends OutputStream
 {
     public EncodeStream(final OutputStream next)
     {
