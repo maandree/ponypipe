@@ -4,13 +4,13 @@
  * Author:  Mattias Andrée, maandree@kth.se
  * Year:    2012
  */
-//set package
+package se.kth.maandree.ponypipe;
 
 import java.io.*;
 
 
 /**
- * Abstract translation stream
+ * Translation stream
  * 
  * @author  Mattias Andrée,  <a href="maailto:maandree@kth.se">maandree@kth.se</a>
  */

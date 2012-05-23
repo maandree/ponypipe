@@ -4,7 +4,7 @@
  * Author:  Mattias Andrée, maandree@kth.se
  * Year:    2012
  */
-//set package
+package se.kth.maandree.ponypipe;
 
 import java.io.*;
 
