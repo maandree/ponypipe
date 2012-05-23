@@ -12,7 +12,7 @@ import java.io.*;
 /**
  * Translation stream
  * 
- * @author  Mattias Andrée,  <a href="maailto:maandree@kth.se">maandree@kth.se</a>
+ * @author  Mattias Andrée,  <a href="mailto:maandree@kth.se">maandree@kth.se</a>
  */
 public class TranslateStream extends OutputStream
 {   public TranslateStream(final OutputStream next, final int[][] from, final int[][] to)
