@@ -18,7 +18,7 @@ public class Ponypipe //Who care's if it is fast!
 {   public static void main(final String... args) throws Throwable
     {   Boolean _ponify = null;
 	boolean deponify = false;
-	String rules = "/usr/share/ponypipe";
+	String rules = "/usr/share/ponypipe/rules";
 	
 	for (int i = 0, n = args.length; i < n; i++)
 	    if (args.equals("-z") || args.equals("--ponify"))
