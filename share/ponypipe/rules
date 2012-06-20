@@ -5,8 +5,8 @@
 # Spaces (exclusing no breaking spaces) is wildcard for any non-alphanumberical character.
 
 america*  ::  amareica*
-anybody   ::  anypony
-anyone    ::  anypony
+anybody*  ::  anypony*
+anyone*   ::  anypony*
 
 boyfriend   ::  boyfriend
 boy*        ::  colt*
@@ -26,8 +26,8 @@ doctor who  ::  doctor whooves
 dr who      ::  dr whooves
 dubstep     ::  dubtrot
 
-everybody  ::  everypony
-everyone   ::  everypony
+everybody*  ::  everypony*
+everyone*   ::  everypony*
 
 facepalm           ::  facehoof
 feet               ::  hooves
@@ -64,11 +64,11 @@ miracle    ::  mareacle
 miracles   ::  mareacles
 money      ::  bits
 
-naysayer    ::  neighsayer
-nobody      ::  nopony
-no one      ::  nopony
-no-one      ::  nopony
-noone       ::  nopony
+nay*        ::  neigh*
+nobody*     ::  nopony*
+no one*     ::  nopony*
+no-one*     ::  nopony*
+noone*      ::  nopony*
 nottingham  ::  trottingham
 
 old-timer  ::  old-trotter
@@ -78,8 +78,8 @@ person        ::  pony
 persons       ::  ponies
 philadelphia  ::  fillydelphia
 
-somebody      ::  somepony
-someone       ::  somepony
+somebody*     ::  somepony*
+someone*      ::  somepony*
 stalingrad    ::  stalliongrad
 step          ::  trot
 sure as hell  ::  sure as hay
