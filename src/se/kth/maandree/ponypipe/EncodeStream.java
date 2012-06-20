@@ -17,12 +17,13 @@ import java.io.*;
 public class EncodeStream extends OutputStream
 {
     public EncodeStream(final OutputStream next)
-    {
-	this.next = next;
+    {   this.next = next;
     }
+    
     
     private final OutputStream next;
     private final int[] buf = new int[6];
+    
     
     public void write(final int b) throws IOException
     {
@@ -50,13 +51,12 @@ public class EncodeStream extends OutputStream
 	    }
 	    
 	    while (ptr > 0)
-		this.next.write(this.buf[--ptr]);
+		this.next.write(this.buf[--ptr] | 128);
 	}
     }
     
     public void flush() throws IOException
-    {
-	this.next.flush();
+    {   this.next.flush();
     }
 }
 

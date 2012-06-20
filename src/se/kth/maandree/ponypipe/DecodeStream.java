@@ -17,14 +17,15 @@ import java.io.*;
 public class DecodeStream extends OutputStream
 {
     public DecodeStream(final OutputStream next)
-    {
-	this.next = next;
+    {   this.next = next;
     }
-	
+    
+    
     private final OutputStream next;
     private int n = 0;
     private int buf = 0;
-	
+    
+    
     public void write(final int b) throws IOException
     {
 	if ((b & 0x80) == 0)
@@ -50,8 +51,7 @@ public class DecodeStream extends OutputStream
     }
     
     public void flush() throws IOException
-    {
-	this.next.flush();
+    {   this.next.flush();
     }
     
 }
