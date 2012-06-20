@@ -55,19 +55,25 @@ fi
 
 
 ## parse options
+function _javac()
+{   javac "$@"
+}
 paramEcho=0
 paramEcj=0
+paramJar=0
 for opt in "$@"; do
     if [[ $opt = '-ecj' ]]; then
 	paramEcj=1
-	function javacSeven()
+	function _javac()
 	{   ecj "$@"
 	}
     elif [[ $opt = '-echo' ]]; then
 	paramEcho=1
-	function javacSeven()
+	function _javac()
 	{   echo "$@"
 	}
+    elif [[ $opt = '-jar' ]]; then
+	paramJar=1
     elif [[ $opt = '-q' ]]; then
 	warns=''
     fi
@@ -93,21 +99,28 @@ function colourise()
 }
 
 
-## exception generation
-if [ -f 'src/se/kth/maandree/javagen/ExceptionGenerator.java' ]; then
-    ## compile exception generator
-    ( javacSeven $warns -cp . $params 'src/se/kth/maandree/javagen/ExceptionGenerator.java'  2>&1
-    ) | colourise &&
-
-    ## generate exceptions code
-    javaSeven -ea -cp bin$jars "se.kth.maandree.javagen.ExceptionGenerator" -o bin -- $(find src | grep '.exceptions$')  2>&1  &&
-    echo -e '\n\n\n'  &&
-
-    ## generate exceptions binaries
-    ( javacSeven $warns -cp bin$jars -source 7 -target 7 $(find bin | grep '.java$')  2>&1
+if [[ $paramJar = 1 ]]; then
+    ## build jar
+    cp -r bin/se .
+    jar -cfm ponypipe.jar META-INF/MANIFEST.MF $(find se)
+    rm -r se
+else
+    ## exception generation
+    if [ -f 'src/se/kth/maandree/javagen/ExceptionGenerator.java' ]; then
+        ## compile exception generator
+	( javacSeven $warns -cp . $params 'src/se/kth/maandree/javagen/ExceptionGenerator.java'  2>&1
+	) | colourise &&
+	
+        ## generate exceptions code
+	javaSeven -ea -cp bin$jars "se.kth.maandree.javagen.ExceptionGenerator" -o bin -- $(find src | grep '.exceptions$')  2>&1  &&
+	echo -e '\n\n\n'  &&
+	
+        ## generate exceptions binaries
+	( javacSeven $warns -cp bin$jars -source 7 -target 7 $(find bin | grep '.java$')  2>&1
+	) | colourise
+    fi
+    
+    ## compile ponypipe
+    ( _javac $warns -cp .:bin$jars -s src -d bin $(find src | grep '.java$')  2>&1
     ) | colourise
 fi
-
-## compile ponypipe
-( javacSeven $warns -cp .:bin$jars $params $(find src | grep '.java$')  2>&1
-) | colourise
