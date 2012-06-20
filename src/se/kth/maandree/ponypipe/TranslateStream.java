@@ -56,7 +56,7 @@ public class TranslateStream extends OutputStream
 	{
 	    final int[] $from = this.alive[i];
 	    if ($from.length > this.ptr)
-		if ($from[this.ptr] == b) //FIXME pattern
+		if (Character.toLowerCase($from[this.ptr]) == Character.toLowerCase(b)) //FIXME pattern
 		    if (this.ptr + 1 < $from.length)
 			this.tmpalive[nalive++] = $from;
 		    else
