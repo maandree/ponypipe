@@ -61,11 +61,30 @@ public class TranslateStream extends OutputStream
 			this.tmpalive[nalive++] = $from;
 		    else
 		    {
+			/* Matching alternative found: translate and reset */
+			
 			for (int j = 0, n = this.from.length; j < n; j++)
-			    if (this.from[j] == $from)
+			    if (this.from[j] == $from) // sic! : array identity matching
 			    {
-				for (int k = 0, m = this.to[j].length; k < m; k++) //FIXME translation
-				    this.next.write(this.to[j][k]);
+				final int[] $to = this.to[j];
+				
+				for (int k = 0, m = $to.length; k < m; k++)
+				{
+				    int chr = $to[k];
+				    
+				    /* Follow casing */
+				    int kk = k < ptr ? k : (ptr - 1);
+				    while (kk >= 0)
+				    {
+					if      (Character.isLowerCase(buf[kk]))  chr = Character.toLowerCase(chr);
+					else if (Character.isUpperCase(buf[kk]))  chr = Character.toUpperCase(chr);
+					else    { kk--; continue; }
+					break;
+				    }
+				    
+				    this.next.write(chr);
+				}
+				
 				break;
 			    }
 			this.ptr = 0;
