@@ -29,17 +29,68 @@ public class TranslateStream extends OutputStream
     }
     
     
-    private final OutputStream next;
-    private final int[][] from;
-    private final int[][] to;
-    private int[] buf = new int[64];
-    private int ptr = 0;
-    private int[][] alive;
-    private int[][] tmpalive;
-    private int palive = 0;
-    private int last = 0;
-    private final ArrayDeque<Vector<Integer>> whitespaces = new ArrayDeque<Vector<Integer>>();
+    protected final OutputStream next;
+    protected final int[][] from;
+    protected final int[][] to;
+    protected int[] buf = new int[64];
+    protected int ptr = 0;
+    protected int[][] alive;
+    protected int[][] tmpalive;
+    protected int palive = 0;
+    protected int last = 0;
+    protected Match match = null;
+    protected ArrayDeque<Vector<Integer>> whitespaces = new ArrayDeque<Vector<Integer>>();
     
+    
+    protected class Match
+    {
+	@SuppressWarnings("unchecked")
+	public Match(final int i)
+	{
+	    this.i = i;
+	    
+	    this.buf = new int[TranslateStream.this.buf.length];
+	    System.arraycopy(TranslateStream.this.buf, 0, this.buf, 0, this.buf.length);
+	    
+	    this.alive = new int[TranslateStream.this.alive.length][];
+	    System.arraycopy(TranslateStream.this.alive, 0, this.alive, 0, this.alive.length);
+	    
+	    this.tmpalive = new int[TranslateStream.this.tmpalive.length][];
+	    System.arraycopy(TranslateStream.this.tmpalive, 0, this.tmpalive, 0, this.tmpalive.length);
+	    
+	    this.whitespaces = new ArrayDeque<Vector<Integer>>();
+	    for (final Vector<Integer> vector : TranslateStream.this.whitespaces)
+		this.whitespaces.add((Vector<Integer>)(vector.clone()));
+	}
+	
+	
+	public final int i;
+	public final Vector<Integer> extra = new Vector<Integer>();
+	private final int last = TranslateStream.this.last;
+	private final int palive = TranslateStream.this.palive;
+	private final int ptr = TranslateStream.this.ptr;
+	private final ArrayDeque<Vector<Integer>> whitespaces;
+	private final int[] buf;
+	private final int[][] alive;
+	private final int[][] tmpalive;
+	
+	
+	public void restore()
+	{   TranslateStream.this.last = this.last;
+	    TranslateStream.this.palive = this.palive;
+	    TranslateStream.this.ptr = this.ptr;
+	    TranslateStream.this.match = null;
+	    TranslateStream.this.whitespaces = this.whitespaces;
+	    TranslateStream.this.buf = this.buf;
+	    TranslateStream.this.alive = this.alive;
+	    TranslateStream.this.tmpalive = this.tmpalive;
+	}
+	
+	public void echo() throws IOException
+	{   for (final Integer b : this.extra)
+		TranslateStream.this.write(b.intValue());
+	}
+    }
     
     
     public void wildcardFix(final int[] fromWord, final int[] toWord, final int[][] formArray, final int[][] toArray, final int index)
@@ -82,6 +133,9 @@ public class TranslateStream extends OutputStream
     
     public void write(final int _b) throws IOException
     {
+	if (this.match != null)
+	    this.match.extra.add(Integer.valueOf(_b));
+	
 	/* Multiply whitespaces */
 	
 	int b = _b;
@@ -123,8 +177,10 @@ public class TranslateStream extends OutputStream
 		   )
 		    if (this.ptr + 1 < $from.length)
 			this.tmpalive[nalive++] = $from;
-		    else
+		    else if (this.palive == 1)
 		    {
+			this.match = null;
+			
 			/* Matching alternative found: translate and reset */
 			
 			for (int j = 0, n = this.from.length; j < n; j++)
@@ -155,7 +211,49 @@ public class TranslateStream extends OutputStream
 			this.ptr = 0;
 			return;
 		    }
+		    else
+			this.match = new Match(i);
 	}
+	
+	if ((nalive == 0) && (this.match != null))
+	{
+	    final Match ma = this.match;
+	    ma.restore();
+	    {
+		/* Matching alternative found: translate and reset */
+		
+		final int[] $from = this.alive[ma.i];
+		for (int j = 0, n = this.from.length; j < n; j++)
+		    if (this.from[j] == $from) // sic! : array identity matching
+		    {
+			final int[] $to = this.to[j];
+			
+			for (int k = 0, m = $to.length; k < m; k++)
+			{
+			    int chr = $to[k];
+			    
+			    /* Follow casing */
+			    int kk = k < ptr ? k : (ptr - 1);
+			    while (kk >= 0)
+			    {
+				if      (Character.isLowerCase(buf[kk]))  chr = Character.toLowerCase(chr);
+				else if (Character.isUpperCase(buf[kk]))  chr = Character.toUpperCase(chr);
+				else
+				    { kk--; continue; }
+				break;
+			    }
+			    
+			    write(this.next, chr);
+			}
+			
+			break;
+		    }
+		this.ptr = 0;
+	    }
+	    ma.echo();
+	    return;
+	}
+	    
 	
 	/* Update live alternatives */
 	
