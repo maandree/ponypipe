@@ -2,8 +2,7 @@
 
 ## program execution information
 package="se.kth.maandree.ponypipe"
-hasMain=1
-hasHome=0
+main="Ponypipe"
 
 
 ## java executer if default is for Java 7
@@ -26,37 +25,7 @@ if [ -d lib ]; then
 fi
 
 
-## default runs
-runs=''
-if [[ $hasMain = 1 ]]; then
-    runs+='main main-da'
-    if [[ $hasHome = 1 ]]; then
-	runs+='falsehome'
-    fi
-fi
-
-## custom runs
-runs+=''
-
-
-## default run
-if [[ $# = 0 ]]; then
-    javaSeven -ea -cp bin$jars "$package".Program
-
-
-## custom runs
-
-elif [[ $hasMain  &&  $1 = "main" ]]; then
-    javaSeven -ea -cp bin$jars "$package".Program
-
-elif [[ $hasMain  &&  $1 = "main-da" ]]; then
-    javaSeven -da -cp bin$jars "$package".Program
-    
-elif [[ $hasMain  &&  $hasHome  &&  $1 = "falsehome" ]]; then
-    __myhome=$HOME
-    HOME='/dev/shm'
-    javaSeven -ea -cp bin$jars "$package".Program
-    HOME=$__myhome
+javaSeven -ea -cp bin$jars "$package"."$main" "$@"
 
 
 ## completion
@@ -66,7 +35,7 @@ elif [[ $1 = "--completion--" ]]; then
 	local cur prev words cword
 	_init_completion -n = || return
 	
-	COMPREPLY=( $( compgen -W "$runs" -- "$cur" ) )
+	COMPREPLY=( $( compgen -W "-r --rules -d --deponify -z --ponify" -- "$cur" ) )
     }
     
     complete -o default -F _run run
