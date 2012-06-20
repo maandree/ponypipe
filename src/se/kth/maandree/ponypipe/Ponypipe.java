@@ -89,12 +89,15 @@ public class Ponypipe //Who care's if it is fast!
 		}
 		{   int last = ' ';
 		    int ptr = 0, c;
-		    for (int j = i + 3; j < len; j++)
+		    i += 3;
+		    for (int j = i; j < len; j++)
 			if (((c = data[j]) != ' ') || (last != ' '))
 			    tmp[ptr++] = last = c;
 		    if (ptr == 0)     return;
 		    if (last == ' ')  ptr--;
 		    pony = new int[ptr];
+		    while (data[i] == ' ')
+			i++;
 		    System.arraycopy(data, i, pony, 0, ptr);
 		}
 		
