@@ -34,6 +34,8 @@ public class TranslateStream extends OutputStream
     
     public void write(final int b) throws IOException
     {
+	/* Store input text */
+	
 	if (this.ptr == buf.length)
 	{
 	    final int[] nbuf = new int[this.ptr];
@@ -42,8 +44,12 @@ public class TranslateStream extends OutputStream
 	}
 	buf[this.ptr] = b;
 	
+	/* Resurrect all alternatives on empty input buffer */
+	
 	if (this.ptr == 0)
 	    System.arraycopy(this.from, 0, this.alive, 0, this.palive = this.from.length);
+	
+	/* Kill non-matching alternatives */
 	
 	int nalive = 0;
 	for (int i = 0; i < this.palive; i++)
@@ -52,7 +58,7 @@ public class TranslateStream extends OutputStream
 	    if ($from.length > this.ptr)
 		if ($from[this.ptr] == b) //FIXME pattern
 		    if (this.ptr + 1 < $from.length)
-			this.tmpalive[this.palive++] = $from;
+			this.tmpalive[nalive++] = $from;
 		    else
 		    {
 			for (int j = 0, n = this.from.length; j < n; j++)
@@ -66,12 +72,19 @@ public class TranslateStream extends OutputStream
 			return;
 		    }
 	}
+	
+	/* Update live alternatives */
+	
 	this.palive = nalive;
 	int[][] tmp = this.tmpalive;
 	this.tmpalive = this.alive;
 	this.alive = tmp;
 	
+	/* Increase input buffer pointer */
+	
 	this.ptr++;
+	
+	/* Echo if all alternatives are dead */
 	
 	if (this.palive == 0)
 	{
