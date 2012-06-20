@@ -24,12 +24,8 @@ if [ -d lib ]; then
     jars=`echo $(find lib | grep .jar$) | sed -e 's/lib\//:/g' -e 's/ //g'`
 fi
 
-
-javaSeven -ea -cp bin$jars "$package"."$main" "$@"
-
-
 ## completion
-elif [[ $1 = "--completion--" ]]; then
+if [[ $1 = "--completion--" ]]; then
     _run()
     {
 	local cur prev words cword
@@ -40,7 +36,8 @@ elif [[ $1 = "--completion--" ]]; then
     
     complete -o default -F _run run
 
-## missing rule
+## run
 else
-    echo "run: Rule missing.  Stop." >&2
+    javaSeven -ea -cp bin$jars "$package"."$main" "$@"
+
 fi
