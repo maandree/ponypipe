@@ -31,7 +31,9 @@ if [[ $1 = "--completion--" ]]; then
 	local cur prev words cword
 	_init_completion -n = || return
 	
-	COMPREPLY=( $( compgen -W "-r --rules -d --deponify -z --ponify" -- "$cur" ) )
+	if [[ ! ($prev = "-r" || $prev = "--rules" || $prev = "--rule") ]]; then
+	    COMPREPLY=( $( compgen -W "-r --rules -d --deponify -z --ponify" -- "$cur" ) )
+	fi
     }
     
     complete -o default -F _run run
