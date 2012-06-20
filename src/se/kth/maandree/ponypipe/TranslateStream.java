@@ -59,7 +59,7 @@ public class TranslateStream extends OutputStream
 	    final int[] $from = this.alive[i];
 	    if ($from.length > this.ptr)
 		if ((Character.toLowerCase ($from[this.ptr]) == Character.toLowerCase (b)) ||  // caseless match
-		    (Character.isWhiteSpace($from[this.ptr]) && Character.isWhiteSpace(b))     // whitespace       //FIXME multiple whitespaces
+		    (Character.isWhitespace($from[this.ptr]) && Character.isWhitespace(b))     // whitespace       //FIXME multiple whitespaces
 		   )
 		    if (this.ptr + 1 < $from.length)
 			this.tmpalive[nalive++] = $from;
