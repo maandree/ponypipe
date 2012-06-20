@@ -38,6 +38,7 @@ public class TranslateStream extends OutputStream
     protected int[][] tmpalive;
     protected int palive = 0;
     protected int last = 0;
+    protected boolean onwhite = true;
     protected Match match = null;
     protected ArrayDeque<Vector<Integer>> whitespaces = new ArrayDeque<Vector<Integer>>();
     
@@ -69,6 +70,7 @@ public class TranslateStream extends OutputStream
 	private final int last = TranslateStream.this.last;
 	private final int palive = TranslateStream.this.palive;
 	private final int ptr = TranslateStream.this.ptr;
+	private final boolean onwhite = TranslateStream.this.onwhite;
 	private final ArrayDeque<Vector<Integer>> whitespaces;
 	private final int[] buf;
 	private final int[][] alive;
@@ -79,6 +81,7 @@ public class TranslateStream extends OutputStream
 	{   TranslateStream.this.last = this.last;
 	    TranslateStream.this.palive = this.palive;
 	    TranslateStream.this.ptr = this.ptr;
+	    TranslateStream.this.onwhite = this.onwhite;
 	    TranslateStream.this.match = null;
 	    TranslateStream.this.whitespaces = this.whitespaces;
 	    TranslateStream.this.buf = this.buf;
@@ -156,13 +159,18 @@ public class TranslateStream extends OutputStream
 	if (isWhitespace)
 	{
 	    if (this.last != ' ')
-		whitespaces.offerLast(new Vector<Integer>());
-	    whitespaces.peekLast().add(Integer.valueOf(b));
+		this.whitespaces.offerLast(new Vector<Integer>());
+	    this.whitespaces.peekLast().add(Integer.valueOf(b));
 	    b = ' ';
 	    if (this.last == ' ')
 		return;
 	}
 	this.last = b;
+	
+	/* Beginning of wort */
+	
+	final boolean _onwhite = this.onwhite;
+	this.onwhite = (b == ' ');
 	
 	/* Store input text */
 	
@@ -174,7 +182,7 @@ public class TranslateStream extends OutputStream
 	}
 	buf[this.ptr] = b;
 	
-	/* Resurrect all alternatives on empty input buffer */
+	/* Resurrect all alternatives on empty input buffer and are whitespace */
 	
 	if (this.ptr == 0)
 	    System.arraycopy(this.from, 0, this.alive, 0, this.palive = this.from.length);
@@ -182,7 +190,7 @@ public class TranslateStream extends OutputStream
 	/* Kill non-matching alternatives */
 	
 	int nalive = 0;
-	for (int i = 0; i < this.palive; i++)
+	if ((this.ptr > 0) || _onwhite)  for (int i = 0; i < this.palive; i++)
 	{
 	    final int[] $from = this.alive[i];
 	    if ($from.length > this.ptr)
@@ -201,6 +209,21 @@ public class TranslateStream extends OutputStream
 			    if (this.from[j] == $from) // sic! : array identity matching
 			    {
 				final int[] $to = this.to[j];
+			    
+				if ($from[$from.length - 1] == ' ')
+				{
+				    int whitediff = 1;
+				    for (final int p : $from)  if (p == ' ')  whitediff--;
+				    for (final int p : $to)    if (p == ' ')  whitediff++;
+				    if ($to  [$to  .length - 1] == ' ')  whitediff--;
+				    
+				    final Vector<Integer> v = new Vector<Integer>();
+				    v.add(Integer.valueOf(' '));
+				    final Vector<Integer> top = this.whitespaces.pollLast();
+				    for (int c = 0; c < whitediff; c++)
+					this.whitespaces.offerLast(v);
+				    this.whitespaces.offerLast(top);
+				}
 				
 				for (int k = 0, m = $to.length; k < m; k++)
 				{
@@ -223,6 +246,7 @@ public class TranslateStream extends OutputStream
 				break;
 			    }
 			this.ptr = 0;
+			this.onwhite = ($from[$from.length - 1] == ' ');
 			return;
 		    }
 		    else
@@ -241,6 +265,21 @@ public class TranslateStream extends OutputStream
 		    if (this.from[j] == $from) // sic! : array identity matching
 		    {
 			final int[] $to = this.to[j];
+			    
+			if ($from[$from.length - 1] == ' ')
+			{
+			    int whitediff = 1;
+			    for (final int p : $from)  if (p == ' ')  whitediff--;
+			    for (final int p : $to)    if (p == ' ')  whitediff++;
+			    if ($to  [$to  .length - 1] == ' ')  whitediff--;
+				
+			    final Vector<Integer> v = new Vector<Integer>();
+			    v.add(Integer.valueOf(' '));
+			    final Vector<Integer> top = this.whitespaces.pollLast();
+			    for (int c = 0; c < whitediff; c++)
+				this.whitespaces.offerLast(v);
+			    this.whitespaces.offerLast(top);
+			}
 			
 			for (int k = 0, m = $to.length; k < m; k++)
 			{
@@ -263,6 +302,7 @@ public class TranslateStream extends OutputStream
 			break;
 		    }
 		this.ptr = 0;
+		this.onwhite = ($from[$from.length - 1] == ' ');
 	    }
 	    ma.echo();
 	    return;
@@ -302,7 +342,7 @@ public class TranslateStream extends OutputStream
 	else
 	{
 	    int w;
-	    final Vector<Integer> wss = whitespaces.pollFirst();
+	    final Vector<Integer> wss = this.whitespaces.pollFirst();
 	    if (wss == null)
 		out.write(' ');
 	    else
@@ -315,7 +355,7 @@ public class TranslateStream extends OutputStream
     public void flush() throws IOException
     {   
 	int w;
-	for (Vector<Integer> wss; (wss = whitespaces.pollFirst()) != null;)
+	for (Vector<Integer> wss; (wss = this.whitespaces.pollFirst()) != null;)
 	    for (final Integer ws : wss)
 		    if ((w = ws.intValue()) != '\0')
 			this.next.write(w);

@@ -57,7 +57,7 @@ public class Ponypipe //Who care's if it is fast!
 	    final OutputStream deponifyPipe = deponify ? new DeponifyStream(encodePipe) : null;
 	    final OutputStream ponifyPipe   = ponify ? new PonifyStream(deponify ? deponifyPipe : encodePipe) : null;
 	    final OutputStream decodePipe   = new DecodeStream(ponify ? ponifyPipe : deponify ? deponifyPipe : encodePipe);
-	
+	    
 	    for (int b; (b = System.in.read()) != -1;)
 		decodePipe.write(b);
 	    decodePipe.write('\0');
