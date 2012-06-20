@@ -19,10 +19,13 @@ import java.util.Vector;
 public class TranslateStream extends OutputStream
 {   public TranslateStream(final OutputStream next, final int[][] from, final int[][] to)
     {   this.next = next;
-	this.from = from;
-	this.to = to;
-	alive = new int[from.length][];
-	tmpalive = new int[from.length][];
+	int n = from.length;
+	this.from = new int[n][];
+	this.to = new int[n][];
+	for (int i = 0; i < n; i++)
+	    wildcardFix(from[i], to[i], this.from, this.to, i);
+	alive = new int[n][];
+	tmpalive = new int[n][];
     }
     
     
@@ -37,6 +40,45 @@ public class TranslateStream extends OutputStream
     private int last = 0;
     private final ArrayDeque<Vector<Integer>> whitespaces = new ArrayDeque<Vector<Integer>>();
     
+    
+    
+    public void wildcardFix(final int[] fromWord, final int[] toWord, final int[][] formArray, final int[][] toArray, final int index)
+    {
+	if ((fromWord[fromWord.length - 1] == '*') && (toWord[toWord.length - 1] == '*'))
+	{
+	    final int[] fw = new int[fromWord.length - 1];
+	    final int[] tw = new int[toWord.length - 1];
+	    System.arraycopy(fromWord, 0, fw, 0, fw.length);
+	    System.arraycopy(toWord, 0, tw, 0, tw.length);
+	    formArray[index] = fw;
+	    toArray[index] = tw;
+	}
+	
+	else if ((fromWord[fromWord.length - 1] == '*') && (toWord[toWord.length - 1] != '*'))
+	{
+	    //TODO what should be do here?
+	}
+	
+	else if ((fromWord[fromWord.length - 1] != '*') && (toWord[toWord.length - 1] == '*'))
+	{
+	    final int[] fw = new int[fromWord.length + 1];
+	    final int[] tw = new int[toWord.length];
+	    System.arraycopy(fromWord, 0, fw, 0, fromWord.length);
+	    System.arraycopy(toWord, 0, tw, 0, toWord.length);
+	    (formArray[index] = fw)[fromWord.length] = ' ';
+	    (toArray[index] = tw)[toWord.length - 1] = ' ';
+	}
+	
+	else if ((fromWord[fromWord.length - 1] != '*') && (toWord[toWord.length - 1] != '*'))
+	{
+	    final int[] fw = new int[fromWord.length + 1];
+	    final int[] tw = new int[toWord.length + 1];
+	    System.arraycopy(fromWord, 0, fw, 0, fromWord.length);
+	    System.arraycopy(toWord, 0, tw, 0, toWord.length);
+	    (formArray[index] = fw)[fromWord.length] = ' ';
+	    (toArray[index] = tw)[toWord.length] = ' ';
+	}
+    }
     
     public void write(final int _b) throws IOException
     {
