@@ -139,7 +139,21 @@ public class TranslateStream extends OutputStream
 	/* Multiply whitespaces */
 	
 	int b = _b;
-	if ((b == '\0') || Character.isWhitespace(b))
+	boolean isWhitespace = (b == '\0') || Character.isWhitespace(b);
+	if (!isWhitespace)
+	    if ((b != '-') && (b != '\''))
+		switch (Character.getType(b))
+		{
+		    case Character.DASH_PUNCTUATION:
+		    case Character.CONNECTOR_PUNCTUATION:
+		    case Character.END_PUNCTUATION:
+		    case Character.FINAL_QUOTE_PUNCTUATION:
+		    case Character.OTHER_PUNCTUATION:
+		    case Character.START_PUNCTUATION:
+			isWhitespace = true;
+			break;
+		}
+	if (isWhitespace)
 	{
 	    if (this.last != ' ')
 		whitespaces.offerLast(new Vector<Integer>());
