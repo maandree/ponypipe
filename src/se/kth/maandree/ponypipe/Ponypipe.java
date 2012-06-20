@@ -60,6 +60,7 @@ public class Ponypipe //Who care's if it is fast!
 	
 	    for (int b; (b = System.in.read()) != -1;)
 		decodePipe.write(b);
+	    decodePipe.write('\0');
 	    decodePipe.flush();
 	}
     }

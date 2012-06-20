@@ -43,7 +43,7 @@ public class TranslateStream extends OutputStream
 	/* Multiply whitespaces */
 	
 	int b = _b;
-	if (Character.isWhitespace(b))
+	if ((b == '\0') || Character.isWhitespace(b))
 	{
 	    if (this.last != ' ')
 		whitespaces.offerLast(new Vector<Integer>());
@@ -147,19 +147,23 @@ public class TranslateStream extends OutputStream
 	    out.write(chr);
 	else
 	{
+	    int w;
 	    final Vector<Integer> wss = whitespaces.pollFirst();
 	    if (wss == null)
 		out.write(' ');
 	    else
 		for (final Integer ws : wss)
-		    out.write(ws.intValue());
+		    if ((w = ws.intValue()) != '\0')
+			out.write(w);
 	}
     }
     
     public void flush() throws IOException
     {   
+	int w;
 	for (Vector<Integer> wss; (wss = whitespaces.pollFirst()) != null;)
 	    for (final Integer ws : wss)
-		this.next.write(ws.intValue());
+		    if ((w = ws.intValue()) != '\0')
+			this.next.write(w);
 	this.next.flush();
 }   }
