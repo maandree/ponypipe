@@ -21,11 +21,11 @@ public class Ponypipe //Who care's if it is fast!
 	String rules = "/usr/share/ponypipe/rules";
 	
 	for (int i = 0, n = args.length; i < n; i++)
-	    if (args.equals("-z") || args.equals("--ponify"))
+	    if (args[i].equals("-z") || args[i].equals("--ponify"))
 		_ponify = Boolean.TRUE;
-	    else if (args.equals("-d") || args.equals("--deponify"))
+	    else if (args[i].equals("-d") || args[i].equals("--deponify"))
 		deponify = true;
-	    else if (args.equals("-r") || args.equals("--rule") || args.equals("--rules"))
+	    else if (args[i].equals("-r") || args[i].equals("--rule") || args[i].equals("--rules"))
 		if (i + 1 < n)
 		    rules = args[++i];
 	
