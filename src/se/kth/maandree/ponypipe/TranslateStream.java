@@ -23,6 +23,7 @@ public class TranslateStream extends OutputStream
 	tmpalive = new int[from.length][];
     }
     
+    
     private final OutputStream next;
     private final int[][] from;
     private final int[][] to;
@@ -31,6 +32,7 @@ public class TranslateStream extends OutputStream
     private int[][] alive;
     private int[][] tmpalive;
     private int palive = 0;
+    
     
     public void write(final int b) throws IOException
     {
@@ -56,7 +58,9 @@ public class TranslateStream extends OutputStream
 	{
 	    final int[] $from = this.alive[i];
 	    if ($from.length > this.ptr)
-		if (Character.toLowerCase($from[this.ptr]) == Character.toLowerCase(b)) //FIXME pattern
+		if ((Character.toLowerCase ($from[this.ptr]) == Character.toLowerCase (b)) ||  // caseless match
+		    (Character.isWhiteSpace($from[this.ptr]) && Character.isWhiteSpace(b))     // whitespace       //FIXME multiple whitespaces
+		   )
 		    if (this.ptr + 1 < $from.length)
 			this.tmpalive[nalive++] = $from;
 		    else
