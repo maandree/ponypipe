@@ -152,13 +152,14 @@ public class TranslateStream extends OutputStream
 		out.write(' ');
 	    else
 		for (final Integer ws : wss)
-		{
-		    int w = ws.intValue();
-		    out.write(w);
-		}
+		    out.write(ws.intValue());
 	}
     }
     
     public void flush() throws IOException
-    {   this.next.flush();
+    {   
+	for (Vector<Integer> wss; (wss = whitespaces.pollFirst()) != null;)
+	    for (final Integer ws : wss)
+		this.next.write(ws.intValue());
+	this.next.flush();
 }   }
