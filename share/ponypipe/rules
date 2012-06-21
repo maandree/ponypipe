@@ -4,33 +4,44 @@
 # Lower case allows any case, the last characters case select the case on any character afterward
 # Spaces (exclusing no breaking spaces) is wildcard for any non-alphanumberical character.
 
-america*  ::  amareica*
-anybody*  ::  anypony*
-anyone*   ::  anypony*
+america*   ::  amareica*
+anybody    ::  anypony
+anyone     ::  anypony
+anybody's  ::  anypony's
+anyone's   ::  anypony's
 
-boyfriend  ::  boyfriend
-boy*       ::  colt*
-bro fist   ::  bro hoof
-bro-fist   ::  bro-hoof
-brofist    ::  brohoof
-butthurt   ::  flankhurt
-butthurt   ::  saddle-sore
+baby*        ::  foal*
+baby-minder* ::  foalsitter*
+boyfriend*   ::  boyfriend*
+boy*         ::  colt*
+bro fist     ::  bro hoof
+bro-fist     ::  bro-hoof
+brofist      ::  brohoof
+bro fists    ::  bro hooves
+bro-fists    ::  bro-hooves
+brofists     ::  brohooves
+butthurt     ::  flankhurt
+butthurt     ::  saddle-sore
 
 chickenpox  ::  ponypox
-child       ::  foal
-children    ::  foals
+child*      ::  foal*
+children*   ::  foals*
 cowboy*     ::  cowpony*
 cowgirl*    ::  cowpony*
 
 doctor who  ::  doctor whooves
+dollar*     ::  bit*
 dr who      ::  dr whooves
-dubstep     ::  dubtrot
+dubstep*    ::  dubtrot*
 
-everybody*  ::  everypony*
-everyone*   ::  everypony*
+everybody    ::  everypony
+everyone     ::  everypony
+everybody's  ::  everypony's
+everyone's   ::  everypony's
 
 facepalm           ::  facehoof
-feet               ::  hooves
+facepalms          ::  facehooves
+feet*              ::  hooves*
 folks              ::  foalks
 fool*              ::  foal*
 foot*              ::  hoof*
@@ -38,60 +49,79 @@ for heaven's sake  ::  for pony's sake
 
 gentlemen    ::  gentlecolts
 gentleman    ::  gentlecolt
+gentlemen's  ::  gentlecolts'
+gentleman's  ::  gentlecolt's
 girls        ::  fillies
-girlfriend   ::  girlfriend
+girlfriend*  ::  girlfriend*
 girl*        ::  filly*
 god          ::  celestia
 guy*         ::  stallion*
 
-halloween        ::  nightmare night
-hands            ::  hooves
-hand*            ::  hoof*
-valentine's day  ::  hearts and hooves day
-hey              ::  hay
-high-five        ::  hoof-five
-human            ::  pony
-humans           ::  ponies
+halloween          ::  nightmare night
+halloween's        ::  nightmare night's
+hands              ::  hooves
+hand*              ::  hoof*
+valentine's day    ::  hearts and hooves day
+valentine's day's  ::  hearts and hooves day's
+hey                ::  hay
+high fiv*          ::  hoof fiv*
+high-fiv*          ::  hoof-fiv*
+human              ::  pony
+humans             ::  ponies
+human's            ::  pony's
+humans'            ::  ponies'
 
 ladies  ::  fillies
+ladies' ::  fillies'
+lady    ::  filly
+lady's  ::  filly's
 
-main       ::  mane
-man        ::  stallion
-manhattan  ::  manehattan
-marathon   ::  mareathon
-men        ::  stallions
-miracle    ::  mareacle
-miracles   ::  mareacles
-money      ::  bits
+main        ::  mane
+man         ::  stallion
+man's       ::  stallion's
+manhattan*  ::  manehattan*
+marathon*   ::  mareathon*
+men         ::  stallions
+men's       ::  stallions'
+miracle*    ::  mareacle*
+money*      ::  bits*
 
-nay*        ::  neigh*
-nobody*     ::  nopony*
-no one*     ::  nopony*
-no-one*     ::  nopony*
-noone*      ::  nopony*
-nottingham  ::  trottingham
+nay*         ::  neigh*
+nobody       ::  nopony
+nobody's     ::  nopony's
+no one       ::  nopony
+no one's     ::  nopony's
+no-one       ::  nopony
+no-one's     ::  nopony's
+noone        ::  nopony
+noone's      ::  nopony's
+nottingham*  ::  trottingham*
 
 old-timer  ::  old-trotter
 
-people        ::  ponies
-person        ::  pony
-persons       ::  ponies
-philadelphia  ::  fillydelphia
+people*        ::  ponies*
+person*        ::  pony*
+persons*       ::  ponies*
+philadelphia*  ::  fillydelphia*
 
-somebody*     ::  somepony*
-someone*      ::  somepony*
-stalingrad    ::  stalliongrad
-step          ::  trot
+somebody      ::  somepony
+somebody's    ::  somepony's
+someone       ::  somepony
+someone's     ::  somepony's
+stalingrad*   ::  stalliongrad*
+step*         ::  trot*
 sure as hell  ::  sure as hay
 
-tattoo     ::  cutie mark
-the heck   ::  the hay
-the hell   ::  the hoof
-the world  ::  equestria
-troll*     ::  parasprite*
+tattoo*     ::  cutie mark*
+the heck    ::  the hay
+the hell    ::  the hoof
+the world*  ::  equestria*
+troll*      ::  parasprite*
 
-victoria's secret  ::  rarity's secret
+victoria's secret*  ::  rarity's secret*
 
-woman  ::  mare
-women  ::  mares
-walk   ::  saunter
+woman   ::  mare
+woman's ::  mare's
+women   ::  mares
+women's ::  mares'
+walk*   ::  saunter*
