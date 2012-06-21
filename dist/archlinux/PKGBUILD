@@ -15,7 +15,7 @@ arch=('any')
 url="https://github.com/maandree/ponypipe"
 license=('Public Domain')
 depends=('java-runtime>=6')
-makedepends=('git', 'java-environment>=6', 'bash')
+makedepends=('git' 'java-environment>=6' 'bash')
 provides=('ponypipe')
 conflicts=('ponypipe')
 
