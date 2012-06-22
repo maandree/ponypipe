@@ -1,8 +1,5 @@
 #!/bin/sh
 
-## completion
-./run.sh --completion--
-
 
 ## create directory for Java binaries
 mkdir bin 2>/dev/null
@@ -105,6 +102,9 @@ if [[ $paramJar = 1 ]]; then
     jar -cfm ponypipe.jar META-INF/MANIFEST.MF $(find se)
     rm -r se
 else
+    ## completion
+    . run.sh --completion--
+    
     ## exception generation
     if [ -f 'src/se/kth/maandree/javagen/ExceptionGenerator.java' ]; then
         ## compile exception generator
