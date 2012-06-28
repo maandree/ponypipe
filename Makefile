@@ -1,6 +1,6 @@
 install:
-	./build.sh
-	./build.sh -jar
+	./build.sh -pkg
+	./build.sh -jar -pkg
 	install -d "${DESTDIR}/usr/bin"
 	install -m 755 ponypipe{,.jar} "${DESTDIR}/usr/bin"
 	install -d "${DESTDIR}/usr/share/ponypipe"

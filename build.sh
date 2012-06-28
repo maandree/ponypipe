@@ -58,6 +58,7 @@ function _javac()
 paramEcho=0
 paramEcj=0
 paramJar=0
+paramPkg=0
 for opt in "$@"; do
     if [[ $opt = '-ecj' ]]; then
 	paramEcj=1
@@ -73,6 +74,8 @@ for opt in "$@"; do
 	paramJar=1
     elif [[ $opt = '-q' ]]; then
 	warns=''
+    elif [[ $opt = -pkg ]]; then
+	paramPkg=1
     fi
 done
 
@@ -102,8 +105,10 @@ if [[ $paramJar = 1 ]]; then
     jar -cfm ponypipe.jar META-INF/MANIFEST.MF $(find se)
     rm -r se
 else
-    ## completion
-    . run.sh --completion--
+    if [[ $paramPkg = 0 ]]; then
+        ## completion
+	. run.sh --completion--
+    fi
     
     ## exception generation
     if [ -f 'src/se/kth/maandree/javagen/ExceptionGenerator.java' ]; then
