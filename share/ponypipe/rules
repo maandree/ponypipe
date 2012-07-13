@@ -71,10 +71,10 @@ humans       ::  ponies
 human's      ::  pony's
 humans'      ::  ponies'
 
-ladies  ::  fillies
-ladies' ::  fillies'
-lady    ::  filly
-lady's  ::  filly's
+ladies   ::  fillies
+ladies'  ::  fillies'
+lady     ::  filly
+lady's   ::  filly's
 
 main        ::  mane
 man         ::  stallion
