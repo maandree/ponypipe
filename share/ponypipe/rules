@@ -58,20 +58,18 @@ girl*        ::  filly*
 god          ::  celestia
 guy*         ::  stallion*
 
-halloween          ::  nightmare night
-halloween's        ::  nightmare night's
-hair*              ::  mane*
-hands              ::  hooves
-hand*              ::  hoof*
-valentine's day    ::  hearts and hooves day
-valentine's day's  ::  hearts and hooves day's
-hey                ::  hay
-high fiv*          ::  hoof fiv*
-high-fiv*          ::  hoof-fiv*
-human              ::  pony
-humans             ::  ponies
-human's            ::  pony's
-humans'            ::  ponies'
+halloween    ::  nightmare night
+halloween's  ::  nightmare night's
+hair*        ::  mane*
+hands        ::  hooves
+hand*        ::  hoof*
+hey          ::  hay
+high fiv*    ::  hoof fiv*
+high-fiv*    ::  hoof-fiv*
+human        ::  pony
+humans       ::  ponies
+human's      ::  pony's
+humans'      ::  ponies'
 
 ladies  ::  fillies
 ladies' ::  fillies'
@@ -104,6 +102,10 @@ old-timer  ::  old-trotter
 people*        ::  ponies*
 person*        ::  pony*
 persons*       ::  ponies*
+pinky promis*  ::  pinkie promis*
+pinky promis*  ::  pinkie pie promis*
+pinky swear*   ::  pinkie swear*
+pinky swear*   ::  pinkie pie swear*
 philadelphia*  ::  fillydelphia*
 
 somebody      ::  somepony
@@ -120,6 +122,8 @@ the hell    ::  the hoof
 the world*  ::  equestria*
 troll*      ::  parasprite*
 
+valentine's day     ::  hearts and hooves day
+valentine's day's   ::  hearts and hooves day's
 victoria's secret*  ::  rarity's secret*
 
 woman   ::  mare
