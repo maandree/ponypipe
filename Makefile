@@ -1,6 +1,10 @@
-install:
+all: ponypipe
+
+ponypipe:
 	./build.sh -pkg
 	./build.sh -jar -pkg
+
+install:
 	install -d "${DESTDIR}/usr/bin"
 	install -m 755 ponypipe.jar "${DESTDIR}/usr/bin"
 	install -m 755 ponypipe "${DESTDIR}/usr/bin"

@@ -1,9 +1,8 @@
 #!/bin/bash
 
-#Hacked to make it work on ubuntu
 
 ## create directory for Java binaries
-mkdir bin 2>/dev/null
+mkdir -p bin
 
 
 ## in with resources to bin/
@@ -21,7 +20,11 @@ fi
 ## java compiler if default is not for Java 7
 [[ $(javac -version 2>&1 | cut -d . -f 2) = '7' ]] ||
     function javacSeven()
-    {   javac "$@"
+    {   if [[ -f /usr/bin/javac7 ]]; then
+	    javac7 "$@"
+	else
+	    javac "$@"
+	fi
     }
 
 
@@ -34,7 +37,11 @@ fi
 ## java executer if default is not for Java 7
 [[ $(echo `java -version 2>&1 | cut -d . -f 2` | cut -d ' ' -f 1) = '7' ]] ||
     function javaSeven()
-    {   java "$@"
+    {   if [[ -f /usr/bin/java7 ]]; then
+	    java7 "$@"
+	else
+	    java "$@"
+	fi
     }
 
 
@@ -94,12 +101,12 @@ function colourise()
         cat
     elif [[ $paramEcj = 1 ]]; then
 	if [[ -f "colourpipe.ecj.jar" ]]; then
-            javaSeven -jar colourpipe.ecj.jar
+            javaSeven -jar colourpipe.ecj.jar 2>/dev/null || cat
 	else
 	    cat
 	fi
     elif [[ -f "colourpipe.javac.jar" ]]; then
-        javaSeven -jar colourpipe.javac.jar
+        javaSeven -jar colourpipe.javac.jar 2>/dev/null || cat
     else
 	cat
     fi

@@ -2,7 +2,9 @@
 ######################
 
 /bin/
+/doc/javadoc/
 *.class
+/*.jar
 
 
 ##  backup files  ##
@@ -11,8 +13,19 @@
 *~
 \#*\#
 .\#*
-
-## vim and kate files ##
-########################
-
 *.swp
+
+
+##  distribution files  ##
+##########################
+
+/dist/*/src/
+/dist/*/ponypipe-*.tar.*
+
+
+##  non-included files  ##
+##########################
+
+/dev/ecj.jar
+/ecj.jar
+/test
