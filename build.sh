@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
+#Hacked to make it work on ubuntu
 
 ## create directory for Java binaries
 mkdir bin 2>/dev/null
@@ -20,7 +21,7 @@ fi
 ## java compiler if default is not for Java 7
 [[ $(javac -version 2>&1 | cut -d . -f 2) = '7' ]] ||
     function javacSeven()
-    {   javac7 "$@"
+    {   javac "$@"
     }
 
 
@@ -33,7 +34,7 @@ fi
 ## java executer if default is not for Java 7
 [[ $(echo `java -version 2>&1 | cut -d . -f 2` | cut -d ' ' -f 1) = '7' ]] ||
     function javaSeven()
-    {   java7 "$@"
+    {   java "$@"
     }
 
 
