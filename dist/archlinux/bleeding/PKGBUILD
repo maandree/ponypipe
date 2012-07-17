@@ -8,8 +8,8 @@
 
 # Maintainer: Mattias Andrée <maandree@operamail.com>
 pkgname=ponypipe-git
-pkgver=20120628
-pkgrel=1
+pkgver=20120717
+pkgrel=2
 pkgdesc="Ponify and deponify text"
 arch=('any')
 url="https://github.com/maandree/ponypipe"
@@ -40,7 +40,7 @@ build() {
   git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
   cd "$srcdir/$_gitname-build"
 
-  make DESTDIR="$pkgdir/"
+  make -B
 }
 
 package() {
