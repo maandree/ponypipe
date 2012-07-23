@@ -215,7 +215,7 @@ public class TranslateStream extends OutputStream
 				    int whitediff = 1;
 				    for (final int p : $from)  if (p == ' ')  whitediff--;
 				    for (final int p : $to)    if (p == ' ')  whitediff++;
-				    if ($to  [$to  .length - 1] == ' ')  whitediff--;
+				    if ($to[$to.length - 1] == ' ')  whitediff--;
 				    
 				    final Vector<Integer> v = new Vector<Integer>();
 				    v.add(Integer.valueOf(' '));
@@ -224,23 +224,88 @@ public class TranslateStream extends OutputStream
 					this.whitespaces.offerLast(v);
 				    this.whitespaces.offerLast(top);
 				}
+			        
+				boolean caseStopped = false;
 				
-				for (int k = 0, m = $to.length; k < m; k++)
+				for (int k = 0, m = $to.length, ki = 0; k < m; k++)
 				{
 				    int chr = $to[k];
 				    
 				    /* Follow casing */
-				    int kk = k < ptr ? k : (ptr - 1);
-				    while (kk >= 0)
+				    int kj = ki < ptr ? ki : (ptr - 1);
+				    if (kj >= 0)
 				    {
-				        if      (Character.isLowerCase(buf[kk]))  chr = Character.toLowerCase(chr);
-					else if (Character.isUpperCase(buf[kk]))  chr = Character.toUpperCase(chr);
-					else
-					    { kk--; continue; }
-					break;
+				        if      (Character.isLowerCase(buf[kj]))  chr = Character.toLowerCase(chr);
+					else if (Character.isUpperCase(buf[kj]))  chr = Character.toUpperCase(chr);
 				    }
 				    
 				    write(this.next, chr);
+				    
+				    int bkj;
+				    boolean    white = Character.isWhitespace(bkj = buf[kj]) || (bkj == '-') || (bkj == '&');
+				    boolean chrWhite = Character.isWhitespace(chr)           || (chr == '-') || (chr == '&');
+				    if ((white == false) && (bkj != '\''))
+					switch (Character.getType(bkj))
+					{
+					    case Character.DASH_PUNCTUATION:
+					    case Character.CONNECTOR_PUNCTUATION:
+					    case Character.END_PUNCTUATION:
+					    case Character.FINAL_QUOTE_PUNCTUATION:
+					    case Character.OTHER_PUNCTUATION:
+					    case Character.START_PUNCTUATION:
+						white = true;
+						break;
+					}
+				    if ((chrWhite == false) && (chr != '\''))
+					switch (Character.getType(chr))
+					{
+					    case Character.DASH_PUNCTUATION:
+					    case Character.CONNECTOR_PUNCTUATION:
+					    case Character.END_PUNCTUATION:
+					    case Character.FINAL_QUOTE_PUNCTUATION:
+					    case Character.OTHER_PUNCTUATION:
+					    case Character.START_PUNCTUATION:
+						chrWhite = true;
+						break;
+					}
+				    
+				    if (caseStopped == false)
+					if (white)
+					    ki += chrWhite ? 1 : 0;
+					else if (chrWhite)
+					{
+					    int kiback = ki;
+					    boolean nextFound = false;
+					    while (ki < ptr)
+					    {
+						white = Character.isWhitespace(bkj = buf[ki]) || (bkj == '-') || (bkj == '&');
+						if ((white == false) && (bkj != '\''))
+						    switch (Character.getType(bkj))
+						    {
+							case Character.DASH_PUNCTUATION:
+							case Character.CONNECTOR_PUNCTUATION:
+							case Character.END_PUNCTUATION:
+							case Character.FINAL_QUOTE_PUNCTUATION:
+							case Character.OTHER_PUNCTUATION:
+							case Character.START_PUNCTUATION:
+							    white = true;
+							    break;
+						    }
+						ki++;
+						if (white)
+						{
+						    nextFound = true;
+						    break;
+						}
+					    }
+					    if (nextFound == false)
+					    {
+						ki = kiback;
+						caseStopped = true;
+					    }
+					}
+					else
+					    ki++;
 				}
 				
 				break;
@@ -271,7 +336,7 @@ public class TranslateStream extends OutputStream
 			    int whitediff = 1;
 			    for (final int p : $from)  if (p == ' ')  whitediff--;
 			    for (final int p : $to)    if (p == ' ')  whitediff++;
-			    if ($to  [$to  .length - 1] == ' ')  whitediff--;
+			    if ($to[$to.length - 1] == ' ')  whitediff--;
 				
 			    final Vector<Integer> v = new Vector<Integer>();
 			    v.add(Integer.valueOf(' '));
@@ -281,22 +346,88 @@ public class TranslateStream extends OutputStream
 			    this.whitespaces.offerLast(top);
 			}
 			
-			for (int k = 0, m = $to.length; k < m; k++)
+			boolean caseStopped = false;
+			
+			for (int k = 0, m = $to.length, ki = 0; k < m; k++)
 			{
 			    int chr = $to[k];
 			    
 			    /* Follow casing */
-			    int kk = k < ptr ? k : (ptr - 1);
-			    while (kk >= 0)
+			    int kj = ki < ptr ? ki : (ptr - 1);
+			    while (kj >= 0)
 			    {
-				if      (Character.isLowerCase(buf[kk]))  chr = Character.toLowerCase(chr);
-				else if (Character.isUpperCase(buf[kk]))  chr = Character.toUpperCase(chr);
-				else
-				    { kk--; continue; }
+				if      (Character.isLowerCase(buf[kj]))  chr = Character.toLowerCase(chr);
+				else if (Character.isUpperCase(buf[kj]))  chr = Character.toUpperCase(chr);
 				break;
 			    }
 			    
 			    write(this.next, chr);
+				    
+			    int bkj;
+			    boolean    white = Character.isWhitespace(bkj = buf[kj]) || (bkj == '-') || (bkj == '&');
+			    boolean chrWhite = Character.isWhitespace(chr)           || (chr == '-') || (chr == '&');
+			    if ((white == false) && (bkj != '\''))
+				switch (Character.getType(bkj))
+				{
+				    case Character.DASH_PUNCTUATION:
+				    case Character.CONNECTOR_PUNCTUATION:
+				    case Character.END_PUNCTUATION:
+				    case Character.FINAL_QUOTE_PUNCTUATION:
+				    case Character.OTHER_PUNCTUATION:
+				    case Character.START_PUNCTUATION:
+					white = true;
+					break;
+				}
+			    if ((chrWhite == false) && (chr != '\''))
+				switch (Character.getType(chr))
+				{
+				    case Character.DASH_PUNCTUATION:
+				    case Character.CONNECTOR_PUNCTUATION:
+				    case Character.END_PUNCTUATION:
+				    case Character.FINAL_QUOTE_PUNCTUATION:
+				    case Character.OTHER_PUNCTUATION:
+				    case Character.START_PUNCTUATION:
+					chrWhite = true;
+					break;
+				}
+			    
+			    if (caseStopped == false)
+				if (white)
+				    ki += chrWhite ? 1 : 0;
+				else if (chrWhite)
+				{
+				    int kiback = ki;
+				    boolean nextFound = false;
+				    while (ki < ptr)
+				    {
+					white = Character.isWhitespace(bkj = buf[ki]) || (bkj == '-') || (bkj == '&');
+					if ((white == false) && (bkj != '\''))
+					    switch (Character.getType(bkj))
+					    {
+						case Character.DASH_PUNCTUATION:
+						case Character.CONNECTOR_PUNCTUATION:
+						case Character.END_PUNCTUATION:
+						case Character.FINAL_QUOTE_PUNCTUATION:
+						case Character.OTHER_PUNCTUATION:
+						case Character.START_PUNCTUATION:
+						    white = true;
+						    break;
+					    }
+					ki++;
+					if (white)
+					{
+					    nextFound = true;
+					    break;
+					}
+				    }
+				    if (nextFound == false)
+				    {
+					ki = kiback;
+					caseStopped = true;
+				    }
+				}
+				else
+				    ki++;
 			}
 			
 			break;
