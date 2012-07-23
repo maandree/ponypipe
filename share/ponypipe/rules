@@ -99,6 +99,8 @@ nottingham*  ::  trottingham*
 
 old-timer  ::  old-trotter
 
+q&a  ::  q&neigh
+
 people*        ::  ponies*
 person*        ::  pony*
 persons*       ::  ponies*
@@ -108,6 +110,10 @@ pinky swear*   ::  pinkie swear*
 pinky swear*   ::  pinkie pie swear*
 philadelphia*  ::  fillydelphia*
 
+seahorse      ::  seapony
+seahorse's    ::  seapony's
+seahorses     ::  seaponies
+seahorses'    ::  seaponies'
 somebody      ::  somepony
 somebody's    ::  somepony's
 someone       ::  somepony

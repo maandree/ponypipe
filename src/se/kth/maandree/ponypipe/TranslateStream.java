@@ -144,7 +144,7 @@ public class TranslateStream extends OutputStream
 	int b = _b;
 	boolean isWhitespace = (b == '\0') || Character.isWhitespace(b);
 	if (!isWhitespace)
-	    if ((b != '-') && (b != '\''))
+	    if ((b != '-') && (b != '\'') && (b != '&'))
 		switch (Character.getType(b))
 		{
 		    case Character.DASH_PUNCTUATION:
