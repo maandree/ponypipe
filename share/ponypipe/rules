@@ -71,10 +71,11 @@ humans       ::  ponies
 human's      ::  pony's
 humans'      ::  ponies'
 
-ladies   ::  fillies
-ladies'  ::  fillies'
-lady     ::  filly
-lady's   ::  filly's
+ladies                ::  fillies
+ladies'               ::  fillies'
+lady                  ::  filly
+lady's                ::  filly's
+lightning conductor*  ::  magical lightning rod*
 
 main        ::  mane
 man         ::  stallion
@@ -132,9 +133,9 @@ valentine's day     ::  hearts and hooves day
 valentine's day's   ::  hearts and hooves day's
 victoria's secret*  ::  rarity's secret*
 
-woman         ::  mare
-woman's       ::  mare's
-women         ::  mares
-women's       ::  mares'
-world record* :: pony record*
-walk*         ::  saunter*
+woman          ::  mare
+woman's        ::  mare's
+women          ::  mares
+women's        ::  mares'
+world record*  ::  pony record*
+walk*          ::  saunter*
