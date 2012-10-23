@@ -1,6 +1,6 @@
 Utility for ponifing (and deponifing) text.
 
-It replaces words should as ’everyone’ with ’everypony’.
+It replaces words such as ’everyone’ with ’everypony’.
 
 
 To ponify a file run:
