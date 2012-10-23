@@ -2,7 +2,7 @@
 # :: with surrounding spaces seperates human language (left) from pony language (right).
 # A line may start with hash to make the line a comment
 # Lower case allows any case, the last characters case select the case on any character afterward
-# Spaces (exclusing no breaking spaces) is wildcard for any non-alphanumberical character.
+# Spaces (excluding no breaking spaces) is wildcard for any non-alphanumberical character.
 
 america*   ::  amareica*
 anybody    ::  anypony
