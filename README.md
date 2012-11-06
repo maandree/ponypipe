@@ -36,4 +36,4 @@ Features:
 * Adaptive casing [todo: can be made better]
 * Clopen words [todo: make it possible to have open beginnings]
 * On the fly ponification
-* [todo: make it possible to make ponified words]
+* [todo: make it possible to make ponified words highlighted]
