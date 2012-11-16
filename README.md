@@ -30,3 +30,14 @@ OR
 
 `-z` can be used instead of `--ponify`.
 
+
+Features:
+
+* Adaptive casing [todo: can be made better]
+* Clopen words [todo: make it possible to have open beginnings]
+* On the fly ponification
+
+Todo:s:
+
+* Make it possible to make ponified words highlighted
+* Extend the list so that clopen words does not match to known bad matchings (for example, add, `boyle :: boyle`)
