@@ -70,6 +70,10 @@ human        ::  pony
 humans       ::  ponies
 human's      ::  pony's
 humans'      ::  ponies'
+horse        ::  pony
+horses       ::  ponies
+horse's      ::  pony's
+horses'      ::  ponies'
 
 ladies                ::  fillies
 ladies'               ::  fillies'
