@@ -11,7 +11,7 @@ makedepends=('java-environment>=6' 'bash')
 provides=('ponypipe')
 conflicts=('ponypipe')
 source=(https://github.com/maandree/$pkgname/tarball/v$pkgver)
-md5sums=(f580dd7de011b888f09e23a9bee2756f)
+md5sums=(5c91cf26c035333f711b81296cf6dedc)
 
 build() {
   cd maandree-$pkgname-*
