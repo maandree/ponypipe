@@ -1,7 +1,3 @@
 #!/bin/sh
-if which java7 >/dev/null; then
-    java7 -jar "$0.jar" "$@";
-else
-    java -jar "$0.jar" "$@";
-fi
+java -jar "$0.jar" "$@";
 
