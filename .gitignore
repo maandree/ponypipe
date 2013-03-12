@@ -11,6 +11,30 @@ _/
 /doc/javadoc/
 *.class
 /*.jar
+*.gz
+*.info
+*.pdf
+*.ps
+*.dvi
+
+
+##  compiled auxiliary files  ##
+################################
+
+ponypipe.aux
+ponypipe.cp
+ponypipe.cps
+ponypipe.fn
+ponypipe.ky
+ponypipe.log
+ponypipe.pg
+ponypipe.toc
+ponypipe.tp
+ponypipe.vr
+ponypipe.op
+ponypipe.ops
+ponypipe.pgs
+ponypipe.vrs
 
 
 ##  backup files  ##
@@ -32,7 +56,5 @@ _/
 ##  non-included files  ##
 ##########################
 
-/dev/ecj.jar
-/ecj.jar
 /test
 

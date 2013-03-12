@@ -1,4 +1,4 @@
-# Asterisks may only be used att the end of a string, and allows to word to continue.
+# Asterisks may only be used at the end of a string, and allows to word to continue.
 # :: with surrounding spaces seperates human language (left) from pony language (right).
 # A line may start with hash to make the line a comment
 # Lower case allows any case, the last characters case select the case on any character afterward

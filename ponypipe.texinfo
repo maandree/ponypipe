@@ -1,0 +1,155 @@
+\input texinfo   @c -*-texinfo-*-
+
+@c %**start of header
+@setfilename ponypipe.info
+@settitle ponypipe
+@afourpaper
+@documentencoding UTF-8
+@documentlanguage en
+@finalout
+@c %**end of header
+
+
+@c @defindex op
+@c @synindex op vr
+@c @synindex cp pg
+
+
+@copying
+This manual is for ponypipe.
+
+Copyright @copyright{} 2013 Mattias Andrée
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+Texts. A copy of the license is included in the section entitled
+``GNU Free Documentation License''.
+@end quotation
+@end copying
+
+
+@ifnottex
+@node Top
+@top ponypipe
+@insertcopying
+@end ifnottex
+
+@titlepage
+@title ponypipe
+@subtitle Ponify and deponify text
+@author Mattias Andrée, maandree@@member.fsf.org
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@page
+@*@*
+@center `It's so simple. So practical. So… me! […] I love it!
+@end titlepage
+
+@contents
+
+
+@menu
+* Overview::                        Overview of @command{ponypipe}
+* Invoking::                        Invoking @command{ponypipe}
+* Translation rule files::          Translation rule files
+* GNU Free Documentation License::  The license of this manual
+* Concept index::                   Concept index
+@end menu
+
+
+
+@node Overview
+@chapter Overview
+@cindex overview
+@cindex description
+
+@command{ponypipe} is a utility for ponifing or deponifing text,
+that is, translating English texts to Equestrian Engish, the dialect
+used in Equestria in My Little Pony: Friendship is Magic. This
+translation is basiclly replacing words and parts of words by something
+horse related, for example replacing `everyone' with `everypony'.
+
+@command{ponypipe} has adaptive casing, clopen word matching and on the fly
+editing. @command{ponypipe} reads from stdin and prints to stdout and can
+thus be used for virtually anything, and it even supports personal
+translation rules and using rules in reverse.
+
+
+@node Invoking
+@chapter Invoking
+@cindex invoking
+@cindex arguments
+@cindex options
+@cindex executing
+@cindex running
+
+The format of a ponypipe command is:
+@command{ponypipe [--ponify | --deponify] [--rules RULES]}.
+
+@command{ponypipe} supports the options:
+
+@table @option
+@item --ponify
+@itemx -z
+This option is used by default as long as @option{--deponify} is not used.
+This option is used to ponify text.
+@item --deponify
+@itemx -d
+This option is used to deponify text, or use rules provided by @option{--rules}
+in reverse, that is, translate from the right side to the left side, instead
+of from the left side to the right side.
+@item --rules
+@itemx -r RULES
+Specify a file with translation rules.
+@end table
+
+
+@node Translation rule files
+@chapter Translation rule files
+@cindex rules
+@cindex personalise
+@cindex settings
+@cindex configurations
+
+Asterisks may only be used at the end of a string, and allows to word to continue.
+A line may start with hash to make the line a comment.
+Lower case allows any case, the last characters case select the case on any character afterward.
+Spaces (excluding no breaking spaces) is wildcard for any non-alphanumberical character.
+
+The file consists of word translation on separate lines with the human version on the left
+side and the pony version on the right side, separated by a two colons (@code{::}).
+
+Example:
+@cartouche
+@example
+everybody    ::  everypony
+everyone     ::  everypony
+everybody's  ::  everypony's
+everyone's   ::  everypony's
+@end example
+@end cartouche
+
+
+@node GNU Free Documentation License
+@appendix GNU Free Documentation License
+@include fdl.texinfo
+
+@node Concept index
+@appendix Concept index
+@printindex cp
+
+@c @node Concept and program index
+@c @appendix Concept and program index
+@c @printindex pg
+
+@c @node Variable and option index
+@c @appendix Variable and option index
+@c @printindex vr
+
+
+@bye
+
