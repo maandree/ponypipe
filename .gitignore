@@ -1,7 +1,7 @@
 ##  non-staging workspace  ##
 #############################
 
-/_/
+_/
 
 
 ##  compiled files  ##
@@ -25,8 +25,8 @@
 ##  distribution files  ##
 ##########################
 
-/dist/*/src/
-/dist/*/ponypipe-*.tar.*
+/dist/*/*/*
+!/dist/archlinux/*/PKGBUILD
 
 
 ##  non-included files  ##
@@ -35,3 +35,4 @@
 /dev/ecj.jar
 /ecj.jar
 /test
+
