@@ -1,6 +1,6 @@
-# Maintainer: Mattias Andrée <maandree@operamail.com>
+# Maintainer: Mattias Andrée <`base64 -d`(bWFhbmRyZWUK)@member.fsf.org>
 pkgname=ponypipe
-pkgver=1.2.1
+pkgver=1.2.2
 pkgrel=1
 pkgdesc="Ponify and deponify text"
 arch=('any')
@@ -10,15 +10,15 @@ depends=('java-runtime>=6')
 makedepends=('java-environment>=6' 'bash')
 provides=('ponypipe')
 conflicts=('ponypipe')
-source=(https://github.com/maandree/ponypipe/tarball/v1.2.1)
-md5sums=(17f7bcd7ca40049359fafa9672b66cc6)
+source=(https://github.com/maandree/$pkgname/tarball/v$pkgver)
+md5sums=(f580dd7de011b888f09e23a9bee2756f)
 
 build() {
-  cd maandree-ponypipe-*
+  cd maandree-$pkgname-*
   make -B
 }
 
 package() {
-  cd maandree-ponypipe-*
+  cd maandree-$pkgname-*
   make DESTDIR="$pkgdir/" install
 }
