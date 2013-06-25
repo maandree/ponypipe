@@ -17,7 +17,7 @@ JAVAC=javac
 CLASS=$(shell find src | grep '\.java$$' | sed -e 's/\.java$$/\.class/g' -e 's/^src\//bin\//g')
 CLASS_JAR=$$(find . | grep '\.class$$')
 BOOK=$(PROGRAM)
-BOOKDIR=./
+BOOKDIR=info/
 
 
 all: class jar info
