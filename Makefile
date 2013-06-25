@@ -7,25 +7,45 @@
 # 
 # [GNU All Permissive License]
 
+COMMAND=ponypipe
+PKGNAME=ponypipe
 PREFIX=/usr
 BIN=/bin
 DATA=/share
+BINJAR=$(DATA)/$(PKGNAME)
+LICENSES=$(DATA)/licenses
+
 PROGRAM=ponypipe
 FLAGS=-Xlint:all -O
 JAR=jar
 JAVAC=javac
 CLASS=$(shell find src | grep '\.java$$' | sed -e 's/\.java$$/\.class/g' -e 's/^src\//bin\//g')
+SOURCE=$(shell find src | grep '\.java$$' | sed -e -e 's/^src\//bin\//g')
 CLASS_JAR=$$(find . | grep '\.class$$')
 BOOK=$(PROGRAM)
 BOOKDIR=info/
 
 
-all: class jar info
+all: code info
 
-class: $(CLASS)
-bin/%.class: src/%.java
-	@mkdir -p bin
-	$(JAVAC) -cp src -s src -d bin $(FLAGS) "$<"
+code: class jar launcher
+
+
+launcher: $(PROGRAM).install
+
+$(PROGRAM).install: $(PROGRAM)
+	cp "$<" "$@"
+	sed -i 's:"$$0.jar":"$(PREFIX)$(BINJAR)/$(COMMAND).jar":g' "$@"
+
+
+bin/%.java: src/%.java
+	@mkdir -p "$${dirname "$@"}"
+	cp "$<" "$@"
+	sed -i 's:"./rules":"$(PREFIX)$(DATA)/$(PKGNAME)/rules":g' "$@"
+
+class: $(SOURCE) $(CLASS)
+bin/%.class: bin/%.java
+	$(JAVAC) -cp bin -s bin -d bin $(FLAGS) "$<"
 
 jar: $(PROGRAM).jar
 $(PROGRAM).jar: META-INF/MANIFEST.MF $(CLASS)
@@ -67,25 +87,32 @@ dvi.xz: $(BOOK).dvi.xz
 	xz -e9 < "$<" > "$@"
 
 
-install:
+install: install-cmd install-license install-info
+
+install-cmd:
 	mkdir -p "$(DESTDIR)$(PREFIX)$(BIN)"
-	install -m 755 "$(PROGRAM).jar" "$(DESTDIR)$(PREFIX)$(BIN)"
-	install -m 755 "$(PROGRAM)" "$(DESTDIR)$(PREFIX)$(BIN)"
-	mkdir -p "$(DESTDIR)$(PREFIX)$(DATA)/$(PROGRAM)"
-	install -m 644 "rules" "$(DESTDIR)$(PREFIX)$(DATA)/$(PROGRAM)/rules"
+	mkdir -p "$(DESTDIR)$(PREFIX)$(BINJAR)"
+	install -m 755 "$(PROGRAM).install" "$(DESTDIR)$(PREFIX)$(BIN)/$(COMMAND)"
+	install -m 755 "$(PROGRAM).jar" "$(DESTDIR)$(PREFIX)$(BINJAR)/$(COMMAND).jar"
+	mkdir -p "$(DESTDIR)$(PREFIX)$(DATA)/$(PKGNAME)"
+	install -m 644 "rules" "$(DESTDIR)$(PREFIX)$(DATA)/$(PKGNAME)/rules"
+
+install-info:
 	mkdir -p "$(DESTDIR)$(PREFIX)$(DATA)/info"
-	install -m 644 "$(BOOK).info.gz" "$(DESTDIR)$(PREFIX)$(DATA)/info"
-	mkdir -p "$(DESTDIR)$(PREFIX)$(DATA)/licenses/$(PROGRAM)"
-	install -m 644 COPYING "$(DESTDIR)$(PREFIX)$(DATA)/licenses/$(PROGRAM)"
+	install -m 644 "$(BOOK).info.gz" "$(DESTDIR)$(PREFIX)$(DATA)/info/$(PKGNAME).info.gz"
+
+install-license:
+	mkdir -p "$(DESTDIR)$(PREFIX)$(LICENSES)/$(PKGNAME)"
+	install -m 644 COPYING "$(DESTDIR)$(PREFIX)$(LICENSES)/$(PKGNAME)/COPYING"
+
 
 uninstall:
-	unlink "$(DESTDIR)$(PREFIX)$(BIN)/$(PROGRAM)"
-	unlink "$(DESTDIR)$(PREFIX)$(BIN)/$(PROGRAM).jar"
-	rm -rf "$(DESTDIR)$(PREFIX)$(DATA)/$(PROGRAM)"
-	rm -rf "$(DESTDIR)$(PREFIX)$(DATA)/licenses/$(PROGRAM)"
-	unlink "$(DESTDIR)$(PREFIX)$(DATA)/info/$(BOOK).info.gz"
+	rm -- "$(DESTDIR)$(PREFIX)$(BIN)/$(COMMAND)"
+	rm -- "$(DESTDIR)$(PREFIX)$(BINJAR)/$(COMMAND).jar"
+	rm -r -- "$(DESTDIR)$(PREFIX)$(DATA)/$(PROGRAM)"
+	rm -r -- "$(DESTDIR)$(PREFIX)$(LICENSES)/$(PKGNAME)"
+	rm -- "$(DESTDIR)$(PREFIX)$(DATA)/info/$(PKGNAME).info.gz"
 
 clean:
-	rm -r bin "$(PROGRAM).jar" 2>/dev/null || exit 0
-	rm -r *.{t2d,aux,{cp,pg,op,vr}{,s},fn,ky,log,toc,tp,bak,info,pdf,ps,dvi,gz} 2>/dev/null || exit 0
+	-rm -r *.{t2d,aux,{cp,pg,op,vr}{,s},fn,ky,log,toc,tp,bak,info,pdf,ps,dvi,gz,install} bin "$(PROGRAM).jar" 2>/dev/null
 

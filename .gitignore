@@ -16,6 +16,7 @@ _/
 *.pdf
 *.ps
 *.dvi
+*.install
 
 
 ##  compiled auxiliary files  ##
