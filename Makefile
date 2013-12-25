@@ -45,7 +45,7 @@ bin/%.java: src/%.java
 
 class: $(SOURCE) $(CLASS)
 bin/%.class: bin/%.java
-	$(JAVAC) -cp bin -s bin -d bin $(FLAGS) "$<"
+	$(JAVAC) -encoding UTF-8 -cp bin -s bin -d bin $(FLAGS) "$<"
 
 jar: $(PROGRAM).jar
 $(PROGRAM).jar: META-INF/MANIFEST.MF $(CLASS)
