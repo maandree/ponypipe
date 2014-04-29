@@ -14,7 +14,7 @@ import java.io.*;
  * 
  * @author  Mattias Andrée, <a href="mailto:maandree@kth.se">maandree@kth.se</a>
  */
-public class Ponypipe //Who care's if it is fast!
+public class Ponypipe //Who care's if it is fast! [Well, appearenly it as too slow...]
 {   public static void main(final String... args) throws Throwable
     {   Boolean _ponify = null;
 	boolean deponify = false;
