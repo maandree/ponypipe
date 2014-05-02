@@ -12,11 +12,32 @@ static int load_rules(char* buf, size_t n);
 static int add_rule(char* buf, size_t n);
 
 
+
+/**
+ * The rule lines that should be free:d
+ */
 static char** rules = NULL;
+
+/**
+ * The human words
+ */
 static char** humans = NULL;
+
+/**
+ * The pony words
+ */
 static char** ponies = NULL;
+
+/**
+ * The number of rules added to the table
+ */
 static size_t rules_ptr = 0;
+
+/**
+ * The capacity of the rule table
+ */
 static size_t rules_size = 128;
+
 
 
 /**
@@ -49,10 +70,12 @@ int main(int argc, char** argv)
 	  rules_file = (const char*)*(argv + ++i);
     }
   
+  
   /* Allocate memories for rules */
   if ((rules  = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
   if ((humans = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
   if ((ponies = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
+  
   
   /* Open the rules file. */
   if ((f = fopen(rules_file, "r")) == NULL)
@@ -66,9 +89,12 @@ int main(int argc, char** argv)
   fclose(f);
   f = NULL;
   
+  
   /* TODO */
   
+  
  done:
+  /* Release everything, do both on error and on success. */
   if (f != NULL)
     fclose(f);
   while (rules_ptr > 0)
@@ -77,7 +103,10 @@ int main(int argc, char** argv)
   if (rules  != NULL)  free(rules);
   if (humans != NULL)  free(humans);
   if (ponies != NULL)  free(ponies);
+  
+  /* Exit the program. */
   return rc;
+  
   
  fail:
   perror(*argv);
@@ -237,6 +266,13 @@ static int load_rules(char* buf, size_t n)
 }
 
 
+/**
+ * Add a rule to the rule table
+ * 
+ * @param   buf  The rule
+ * @param   n    The length of the rule, this excludes one extra char in the end that should be used for NUL-termination
+ * @return       Non-zero on error
+ */
 static int add_rule(char* buf, size_t n)
 {
   char* delimiter;
