@@ -417,6 +417,13 @@ static int add_rule(char* buf, size_t n)
 }
 
 
+/**
+ * Load precompiled rules
+ * 
+ * @param   f           The file to read from
+ * @param   block_size  The number of bytes to read at each I/O operation
+ * @return              Non-zero on error
+ */
 static int load_precompiled_rules(FILE* f, size_t block_size)
 {
   char* buf = malloc(block_size * sizeof(char));
