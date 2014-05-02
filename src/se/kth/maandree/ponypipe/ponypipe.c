@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <limits.h>
 
 
 #define BLOCK_SIZE  (8 << 10)
@@ -10,6 +11,7 @@
 static int buffered_read(FILE* f, size_t block_size, int (*sink)(char* buf, size_t n));
 static int load_rules(char* buf, size_t n);
 static int add_rule(char* buf, size_t n);
+static int load_precompiled_rules(FILE* f, size_t block_size);
 
 
 
@@ -53,9 +55,12 @@ int main(int argc, char** argv)
   int ponify = 1;
   FILE* f = NULL;
   int rc = 0;
+  int precompiled = 0;
   int i;
+  char rules_file_precompiled[PATH_MAX];
   
-  /* TODO support, and default to, precompiled rules */
+  
+  /* TODO support precompilation for rules. */
   
   /* Parse command line options. */
   for (i = 1; i < argc; i++)
@@ -71,19 +76,36 @@ int main(int argc, char** argv)
     }
   
   
-  /* Allocate memories for rules */
-  if ((rules  = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
-  if ((humans = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
-  if ((ponies = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
+  /* Try opening the precompiled. */
+  snprintf(rules_file_precompiled, PATH_MAX, "%s.compiled", rules_file);
+  if ((f = fopen(rules_file, "r")) != NULL)
+    precompiled = 1;
   
   
-  /* Open the rules file. */
-  if ((f = fopen(rules_file, "r")) == NULL)
-    goto fail;
+  if (precompiled == 0)
+    {
+      /* Allocate memories for rules. */
+      if ((rules  = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
+      if ((humans = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
+      if ((ponies = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
+      
+      
+      /* Open the rules file. */
+      if (precompiled == 0)
+	if ((f = fopen(rules_file, "r")) == NULL)
+	  goto fail;
+      
+      /* Parse rules file. */
+      if (buffered_read(f, BLOCK_SIZE, load_rules))
+	goto fail;
+    }
+  else
+    {
+      /* Parse precompiled rules file. */
+      if (load_precompiled_rules(f, BLOCK_SIZE))
+	goto fail;
+    }
   
-  /* Parse rules file. */
-  if (buffered_read(f, BLOCK_SIZE, load_rules))
-    goto fail;
   
   /* Close the rules file. */
   fclose(f);
@@ -270,7 +292,8 @@ static int load_rules(char* buf, size_t n)
  * Add a rule to the rule table
  * 
  * @param   buf  The rule
- * @param   n    The length of the rule, this excludes one extra char in the end that should be used for NUL-termination
+ * @param   n    The length of the rule, this excludes one extra char
+ *               in the end that should be used for NUL-termination
  * @return       Non-zero on error
  */
 static int add_rule(char* buf, size_t n)
@@ -335,5 +358,79 @@ static int add_rule(char* buf, size_t n)
   rules_ptr++;
   
   return 0;
+}
+
+
+static int load_precompiled_rules(FILE* f, size_t block_size)
+{
+  char* buf = malloc(block_size * sizeof(char));
+  size_t size = block_size;
+  size_t ptr = 0;
+  size_t r;
+  char* buf_;
+  
+  if (buf == NULL)
+    return -1;
+  
+  /* Read file. */
+  for (;;)
+    {
+      /* Increase buffer if it does not fit another block. */
+      if (size - ptr < block_size)
+	{
+	  char* old_buf = buf;
+	  buf = realloc(buf, (size <<= 1) * sizeof(char));
+	  if (buf == NULL)
+	    {
+	      free(old_buf);
+	      return -1;
+	    }
+	}
+      
+      /* Read a block. */
+      r = fread(buf + ptr, sizeof(char), block_size, f);
+      ptr += r;
+      
+      /* Look for read error. */
+      if ((r < block_size) && ferror(f))
+	{
+	  free(buf);
+	  return -1;
+	}
+      
+      /* Check if the end of the file was reached. */
+      if ((r < block_size) && feof(f))
+	break;
+    }
+  
+  /* Parse file. */
+  buf_ = buf;
+  rules_size = ((size_t*)buf_)[0];
+  buf_ += 1 * sizeof(size_t) / sizeof(char);
+  /* Allocate memories for rules. */
+  if ((rules  = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
+  if ((humans = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
+  if ((ponies = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
+  /* All rules to table. */
+  for (rules_ptr = 0; rules_ptr < rules_size; rules_ptr++)
+    {
+      if (rules_ptr == 0)
+	rules[rules_ptr] = buf; /* Move it to the rule table so that it can be free:d on exit. */
+      else
+	rules[rules_ptr] = NULL;
+      
+      humans[rules_ptr] = buf;
+      buf += strlen(buf) + 1;
+      
+      ponies[rules_ptr] = buf;
+      buf += strlen(buf) + 1;
+    }
+  
+  return 0;
+  
+ fail:
+  if (rules_ptr == 0)
+    free(buf);
+  return -1;
 }
 
