@@ -329,6 +329,7 @@ static int add_rule(char* buf, size_t n)
     }
   
   /* Add rules to table. */
+  rules[rules_ptr] = rule;
   humans[rules_ptr] = human;
   ponies[rules_ptr] = pony;
   rules_ptr++;
