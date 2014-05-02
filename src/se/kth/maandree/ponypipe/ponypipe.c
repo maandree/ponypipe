@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <stddef.h>
 
 
@@ -11,6 +12,13 @@ static int load_rules(char* buf, size_t n);
 static int add_rule(char* buf, size_t n);
 
 
+static char** rules = NULL;
+static char** humans = NULL;
+static char** ponies = NULL;
+static size_t rules_ptr = 0;
+static size_t rules_size = 128;
+
+
 /**
  * Mane!
  * 
@@ -20,10 +28,11 @@ static int add_rule(char* buf, size_t n);
  */
 int main(int argc, char** argv)
 {
-  const char* rules = "./rules";
+  const char* rules_file = "./rules";
   int ponify = 1;
+  FILE* f = NULL;
+  int rc = 0;
   int i;
-  FILE* f;
   
   /* TODO support, and default to, precompiled rules */
   
@@ -36,32 +45,44 @@ int main(int argc, char** argv)
       else if (!strcmp(arg, "--deponify") || !strcmp(arg, "-d"))
 	ponify = 0;
       else if (!strcmp(arg, "--rule") || !strcmp(arg, "--rules") || !strcmp(arg, "-r"))
-	if (i + 1 < n)
-	  rules = (const char*)*(args + ++i);
+	if (i + 1 < argc)
+	  rules_file = (const char*)*(argv + ++i);
     }
   
+  /* Allocate memories for rules */
+  if ((rules  = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
+  if ((humans = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
+  if ((ponies = malloc(rules_size * sizeof(char*))) == NULL)  goto fail;
+  
   /* Open the rules file. */
-  f = fopen(rules, "r");
-  if (f == NULL)
-    {
-      perror(*argv);
-      return 1;
-    }
+  if ((f = fopen(rules_file, "r")) == NULL)
+    goto fail;
   
   /* Parse rules file. */
   if (buffered_read(f, BLOCK_SIZE, load_rules))
-    {
-      perror(*argv);
-      /* TODO release resource. */
-      return 1;
-    }
+    goto fail;
   
   /* Close the rules file. */
   fclose(f);
+  f = NULL;
   
   /* TODO */
   
-  return 0;
+ done:
+  if (f != NULL)
+    fclose(f);
+  while (rules_ptr > 0)
+    if (rules[--rules_ptr] != NULL)
+      free(rules[rules_ptr]);
+  if (rules  != NULL)  free(rules);
+  if (humans != NULL)  free(humans);
+  if (ponies != NULL)  free(ponies);
+  return rc;
+  
+ fail:
+  perror(*argv);
+  rc = 1;
+  goto done;
 }
 
 
@@ -90,7 +111,7 @@ static int buffered_read(FILE* f, size_t block_size, int (*sink)(char* buf, size
       /* Look for read error. */
       if ((r < block_size) && ferror(f))
 	{
-	  sink(NULL, 1)
+	  sink(NULL, 1);
 	  rc = -1;
 	  break;
 	}
@@ -173,6 +194,18 @@ static int load_rules(char* buf, size_t n)
 	    }
 	  else if (c == '\n')
 	    {
+	      /* Make sure that `add_rule` can add a NUL-termination. */
+	      if (ptr == buf_size)
+		{
+		  char* new_buf = realloc(rule_buf, (buf_size <<= 1) * sizeof(char));
+		  if (new_buf == NULL)
+		    {
+		      free(rule_buf);
+		      return -1;
+		    }
+		  rule_buf = new_buf;
+		}
+	      
 	      /* Parse and add the rule when the end of the rule line has been reached. */
 	      if (add_rule(buf, ptr))
 		{
@@ -195,7 +228,7 @@ static int load_rules(char* buf, size_t n)
 		  rule_buf = new_buf;
 		}
 	      /* Add the current character to the rule buffer.  */
-	      *(rule_buf + ptr++) = c;
+	      *(rule_buf + ptr++) = (c == '\t' ? ' ' : c);
 	    }
 	}
     }
@@ -206,7 +239,64 @@ static int load_rules(char* buf, size_t n)
 
 static int add_rule(char* buf, size_t n)
 {
-  /* TODO */
+  char* delimiter;
+  char* rule;
+  char* human;
+  char* pony;
+  size_t m;
+  
+  /* NUL-terminate the buffer and the last pattern. */
+  buf[n] = '\0';
+  
+  /* Find human–pony delimiter. */
+  delimiter = strstr(buf, " :: ");
+  if (delimiter == NULL)
+    return 0;
+  
+  /* NUL-terminate the first pattern. */
+  *delimiter = '\0';
+  
+  /* Copy the buffer. */
+  if ((rule = malloc((n + 1) * sizeof(char))) == NULL)
+    return -1;
+  memcpy(rule, buf, n + 1);
+  
+  /* Get the human pattern and the pony pattern. */
+  m = (delimiter - buf);
+  human = rule;
+  pony = human + m + 4;
+  
+  /* Strip left-side spaces. */
+  while (*human == ' ')  human++;
+  while (*pony  == ' ')  pony++;
+  
+  /* Strip right-side spaces. */
+  while (human[--m] == ' ')  ;
+  while (pony[--n]  == ' ')  ;
+  human[m + 1] = '\0';
+  pony[n + 1]  = '\0';
+  
+  /* Grow rule table if neccessary. */
+  if (rules_ptr == rules_size)
+    {
+      char** new_buf;
+      rules_size <<= 1;
+      
+      if ((new_buf = realloc(rules, rules_size * sizeof(char*))) == NULL)  return -1;
+      rules = new_buf;
+      
+      if ((new_buf = realloc(humans, rules_size * sizeof(char*))) == NULL)  return -1;
+      humans = new_buf;
+      
+      if ((new_buf = realloc(ponies, rules_size * sizeof(char*))) == NULL)  return -1;
+      ponies = new_buf;
+    }
+  
+  /* Add rules to table. */
+  humans[rules_ptr] = human;
+  ponies[rules_ptr] = pony;
+  rules_ptr++;
+  
   return 0;
 }
 
