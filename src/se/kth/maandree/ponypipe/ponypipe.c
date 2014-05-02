@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <limits.h>
+#include <unistd.h>
 
 
 #define BLOCK_SIZE  (8 << 10)
@@ -56,11 +57,10 @@ int main(int argc, char** argv)
   FILE* f = NULL;
   int rc = 0;
   int precompiled = 0;
+  int compile = 0;
   int i;
   char rules_file_precompiled[PATH_MAX];
   
-  
-  /* TODO support precompilation for rules. */
   
   /* Parse command line options. */
   for (i = 1; i < argc; i++)
@@ -70,6 +70,8 @@ int main(int argc, char** argv)
 	ponify = 1;
       else if (!strcmp(arg, "--deponify") || !strcmp(arg, "-d"))
 	ponify = 0;
+      else if (!strcmp(arg, "--compile"))
+	compile++;
       else if (!strcmp(arg, "--rule") || !strcmp(arg, "--rules") || !strcmp(arg, "-r"))
 	if (i + 1 < argc)
 	  rules_file = (const char*)*(argv + ++i);
@@ -78,8 +80,11 @@ int main(int argc, char** argv)
   
   /* Try opening the precompiled. */
   snprintf(rules_file_precompiled, PATH_MAX, "%s.compiled", rules_file);
-  if ((f = fopen(rules_file, "r")) != NULL)
-    precompiled = 1;
+  if (compile == 0)
+    {
+      if ((f = fopen(rules_file_precompiled, "r")) != NULL)
+	precompiled = 1;
+    }
   
   
   if (precompiled == 0)
@@ -112,7 +117,58 @@ int main(int argc, char** argv)
   f = NULL;
   
   
-  /* TODO */
+  if (compile)
+    {
+      size_t n = 0, i, m;
+      char* buf;
+      char* buf_;
+      /* Save compiled rule table. */
+      if ((f = fopen(rules_file_precompiled, "w")) == NULL)
+	goto fail;
+      for (i = 0; i < rules_ptr; i++)
+	n += strlen(humans[i]) + strlen(ponies[i]);
+      n += rules_ptr * 2;
+      n *= sizeof(char);
+      n += sizeof(size_t);
+      if ((buf = buf_ = malloc(n)) == NULL)
+	goto fail;
+      ((size_t*)buf_)[0] = rules_ptr;
+      buf_ += 1 * sizeof(size_t) / sizeof(char);
+      for (i = 0; i < rules_ptr; i++)
+	{
+	  memcpy(buf_, humans[i], m = strlen(humans[i]) + 1);
+	  buf_ += m;
+	  
+	  memcpy(buf_, ponies[i], m = strlen(ponies[i]) + 1);
+	  buf_ += m;
+	}
+      if ((fwrite(buf, sizeof(char), n, f)) < n)
+	{
+	  rc = 2;
+	  perror(*argv);
+	  free(buf);
+	  fclose(f);
+	  f = NULL;
+	  if (unlink(rules_file_precompiled) < 0)
+	    {
+	      perror(*argv);
+	      fprintf(stderr, "%s: critical warning: %s may not have been removed "
+		      "after unsuccessful write to it, please delete it manually.\n",
+		      *argv, rules_file_precompiled);
+	    }
+	  goto done;
+	}
+      free(buf);
+      
+      /* Notify the user about the success, unless --compile has been specifed more than once. */
+      if (compile == 1)
+	fprintf(stderr, "%s: %s has been compiled, keep in mind that compiled rule "
+		"files are processor architecture dependent.\n", *argv, rules_file);
+    }
+  else
+    {
+      /* TODO do translation */
+    }
   
   
  done:
