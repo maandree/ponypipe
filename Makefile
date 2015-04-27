@@ -39,7 +39,7 @@ $(PROGRAM).install: $(PROGRAM)
 
 
 bin/%.java: src/%.java
-	@mkdir -p "$${dirname "$@"}"
+	@mkdir -p "$$(dirname "$@")"
 	cp "$<" "$@"
 	sed -i 's:"./rules":"$(PREFIX)$(DATA)/$(PKGNAME)/rules":g' "$@"
 
