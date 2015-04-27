@@ -7,6 +7,7 @@
 # 
 # [GNU All Permissive License]
 
+SHELL=/bin/bash
 COMMAND=ponypipe
 PKGNAME=ponypipe
 PREFIX=/usr
