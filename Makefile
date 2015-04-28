@@ -7,6 +7,7 @@
 # 
 # [GNU All Permissive License]
 
+SHELL=/bin/bash
 COMMAND=ponypipe
 PKGNAME=ponypipe
 PREFIX=/usr
@@ -20,7 +21,7 @@ FLAGS=-Xlint:all -O
 JAR=jar
 JAVAC=javac
 CLASS=$(shell find src | grep '\.java$$' | sed -e 's/\.java$$/\.class/g' -e 's/^src\//bin\//g')
-SOURCE=$(shell find src | grep '\.java$$' | sed -e -e 's/^src\//bin\//g')
+SOURCE=$(shell find src | grep '\.java$$' | sed -e 's/^src\//bin\//g')
 CLASS_JAR=$$(find . | grep '\.class$$')
 BOOK=$(PROGRAM)
 BOOKDIR=info/
@@ -39,7 +40,7 @@ $(PROGRAM).install: $(PROGRAM)
 
 
 bin/%.java: src/%.java
-	@mkdir -p "$${dirname "$@"}"
+	@mkdir -p "$$(dirname "$@")"
 	cp "$<" "$@"
 	sed -i 's:"./rules":"$(PREFIX)$(DATA)/$(PKGNAME)/rules":g' "$@"
 
