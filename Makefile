@@ -1,4 +1,4 @@
-# Copyright © 2013, 2017  Mattias Andrée (maandree@member.fsf.org)
+# Copyright © 2013, 2017  Mattias Andrée (m@maandree.se)
 # 
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright

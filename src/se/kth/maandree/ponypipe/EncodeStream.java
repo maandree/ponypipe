@@ -1,7 +1,7 @@
 /**
  * Public domain  (does not reach threshold of originiality)
  * 
- * Author:  Mattias Andrée, maandree@kth.se
+ * Author:  Mattias Andrée, m@maandree.se
  * Year:    2012
  */
 package se.kth.maandree.ponypipe;
@@ -12,7 +12,7 @@ import java.io.*;
 /**
  * UTF32 to UTF8 convertion stream
  * 
- * @author  Mattias Andrée, <a href="mailto:maandree@kth.se">maandree@kth.se</a>
+ * @author  Mattias Andrée, <a href="mailto:m@maandree.se">m@maandree.se</a>
  */
 public class EncodeStream extends OutputStream
 {

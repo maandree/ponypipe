@@ -40,7 +40,7 @@ Texts. A copy of the license is included in the section entitled
 @titlepage
 @title ponypipe
 @subtitle Ponify and deponify text
-@author Mattias Andrée, maandree@@member.fsf.org
+@author Mattias Andrée, m@@maandree.se
 @page
 @vskip 0pt plus 1filll
 @insertcopying
